@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageBluetooth.Android", "ManageBluetooth\ManageBluetooth.Android\ManageBluetooth.Android.csproj", "{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageBluetooth", "ManageBluetooth\ManageBluetooth\ManageBluetooth.csproj", "{067086F1-76C7-4BC1-916F-7F0B56E85A19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67BCB09B-EAB4-4DFF-B682-6CB04F0EEBDF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{067086F1-76C7-4BC1-916F-7F0B56E85A19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{067086F1-76C7-4BC1-916F-7F0B56E85A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{067086F1-76C7-4BC1-916F-7F0B56E85A19}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{067086F1-76C7-4BC1-916F-7F0B56E85A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{067086F1-76C7-4BC1-916F-7F0B56E85A19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{067086F1-76C7-4BC1-916F-7F0B56E85A19}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFDC85B1-7FFF-4C1C-BCED-5CB0330D8A03}
+	EndGlobalSection
+EndGlobal

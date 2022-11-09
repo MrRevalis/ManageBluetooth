@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:cu="clr-namespace:ManageBluetooth.Custom"
+    xmlns:cv="clr-namespace:ManageBluetooth.Converters"
+    xmlns:const="clr-namespace:ManageBluetooth.Models.Constants"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    x:Class="ManageBluetooth.Views.BluetoothPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:BluetoothEnabledToBackgroundColor
+                x:Key="BluetoothEnabledToBackgroundColor" />
+            <cv:BluetootEnabledToCorrespondingText
+                x:Key="BluetootEnabledToCorrespondingText" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <cu:RoundedCustomFrame
+                CornerRadius="0, 0, 20, 20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Text="{Binding IsBluetoothEnabled, Converter={StaticResource BluetootEnabledToCorrespondingText}}"
+                        FontSize="Body"
+                        Grid.Column="0">
+                        <Label.Style>
+                            <Style
+                                TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger
+                                        TargetType="Label"
+                                        Binding="{Binding IsBluetoothEnabled}"
+                                        Value="True">
+                                        <Setter
+                                            Property="TextColor"
+                                            Value="White" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        TargetType="Label"
+                                        Binding="{Binding IsBluetoothEnabled}"
+                                        Value="False">
+                                        <Setter
+                                            Property="TextColor"
+                                            Value="Black" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                    <Switch
+                        IsToggled="{Binding IsBluetoothEnabled}"
+                        OnColor="#F6F6F6"
+                        ThumbColor="White"
+                        xct:TouchEffect.Command="{Binding ChangeBluetoothStatus}"
+                        HorizontalOptions="End"
+                        Grid.Column="1">
+                    </Switch>
+                </Grid>
+                <cu:RoundedCustomFrame.Style>
+                    <Style
+                        TargetType="cu:RoundedCustomFrame">
+                        <Style.Triggers>
+                            <DataTrigger
+                                TargetType="cu:RoundedCustomFrame"
+                                Binding="{Binding IsBluetoothEnabled}"
+                                Value="True">
+                                <Setter
+                                    Property="BackgroundColor"
+                                    Value="{x:Static const:ColorValueConstants.DarkBlueColor}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="cu:RoundedCustomFrame"
+                                Binding="{Binding IsBluetoothEnabled}"
+                                Value="False">
+                                <Setter
+                                    Property="BackgroundColor"
+                                    Value="White" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </cu:RoundedCustomFrame.Style>
+            </cu:RoundedCustomFrame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
