@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -122,5 +122,14 @@
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Włączony</value>
+  </data>
+  <data name="BluetoothDisabled" xml:space="preserve">
+    <value>Włącz Bluetooth, aby połączyć się z urządzeniami w pobliżu.</value>
+  </data>
+  <data name="BluetoothEnabled" xml:space="preserve">
+    <value>Telefon jest widoczny dla innych urządzeń jako {0}.</value>
+  </data>
+  <data name="ConnectedDevices" xml:space="preserve">
+    <value>Połączone urządzenia</value>
   </data>
 </root>

@@ -1,4 +1,9 @@
-﻿using ManageBluetooth.Interface;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Android.Bluetooth;
+
+using ManageBluetooth.Interface;
 using ManageBluetooth.Models.Constants;
 
 using Plugin.BLE;
@@ -14,12 +19,16 @@ namespace ManageBluetooth.Services
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
 
+        private readonly BluetoothManager _manager;
+
         public bool BluetoothEnabled { get; set; }
 
         public BluetoothService()
         {
             this._bluetooth = CrossBluetoothLE.Current;
             this._adapter = CrossBluetoothLE.Current.Adapter;
+
+            this._manager = (BluetoothManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.BluetoothService);
 
             this._bluetooth.StateChanged += BluetootStateChanged;
         }
@@ -47,6 +56,32 @@ namespace ManageBluetooth.Services
         public bool IsBluetoothEnabled()
         {
             return this._bluetooth.IsOn;
+        }
+
+        public void ChangeBluetoothState()
+        {
+            if (IsBluetoothEnabled())
+            {
+                _manager.Adapter.Disable();
+            }
+            else
+            {
+                _manager.Adapter.Enable();
+            }
+        }
+
+        public async Task<IEnumerable<string>> GetConnectedBluetoothDevices()
+        {
+            var devicesNames = new List<string>();
+
+            var systemDevices = _adapter.GetSystemConnectedOrPairedDevices();
+
+            foreach (var device in systemDevices)
+            {
+                devicesNames.Add(device.Name);
+            }
+
+            return devicesNames;
         }
     }
 }

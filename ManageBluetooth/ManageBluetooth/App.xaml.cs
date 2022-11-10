@@ -1,5 +1,7 @@
-﻿using ManageBluetooth.Views;
+﻿using ManageBluetooth.Resources;
+using ManageBluetooth.Views;
 
+using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.Forms;
 
 namespace ManageBluetooth
@@ -12,6 +14,9 @@ namespace ManageBluetooth
             InitializeComponent();
 
             Startup.Init();
+
+            LocalizationResourceManager.Current.Init(AppResources.ResourceManager);
+            LocalizationResourceManager.Current.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => AppResources.Culture = LocalizationResourceManager.Current.CurrentCulture; ;
 
             MainPage = new NavigationPage(new BluetoothPage());
         }

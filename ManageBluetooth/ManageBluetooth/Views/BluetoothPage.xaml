@@ -3,23 +3,25 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:cu="clr-namespace:ManageBluetooth.Custom"
-    xmlns:cv="clr-namespace:ManageBluetooth.Converters"
     xmlns:const="clr-namespace:ManageBluetooth.Models.Constants"
+    xmlns:cv="clr-namespace:ManageBluetooth.Converters"
+    xmlns:res="clr-namespace:ManageBluetooth.Resources"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     x:Class="ManageBluetooth.Views.BluetoothPage">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <cv:BluetoothEnabledToBackgroundColor
-                x:Key="BluetoothEnabledToBackgroundColor" />
-            <cv:BluetootEnabledToCorrespondingText
-                x:Key="BluetootEnabledToCorrespondingText" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <cu:RoundedCustomFrame
+                Grid.Row="0"
                 CornerRadius="0, 0, 20, 20">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -27,7 +29,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Label
-                        Text="{Binding IsBluetoothEnabled, Converter={StaticResource BluetootEnabledToCorrespondingText}}"
+                        Text="{Binding BluetoothState.Localized}"
                         FontSize="Body"
                         Grid.Column="0">
                         <Label.Style>
@@ -58,7 +60,7 @@
                         IsToggled="{Binding IsBluetoothEnabled}"
                         OnColor="#F6F6F6"
                         ThumbColor="White"
-                        xct:TouchEffect.Command="{Binding ChangeBluetoothStatus}"
+                        xct:TouchEffect.Command="{Binding ChangeBluetoothStatusCommand}"
                         HorizontalOptions="End"
                         Grid.Column="1">
                     </Switch>
@@ -87,6 +89,36 @@
                     </Style>
                 </cu:RoundedCustomFrame.Style>
             </cu:RoundedCustomFrame>
-        </StackLayout>
+
+            <ContentView
+                Grid.Row="1">
+                <Grid>
+                    <ScrollView>
+                        <StackLayout>
+                            <Label
+                                Text="{Binding IsBluetoothEnabledMessage.Localized}"
+                                FontSize="Body"
+                                Padding="10" />
+                            <StackLayout
+                                IsVisible="{Binding IsBluetoothEnabled}"
+                                BindableLayout.ItemsSource="{Binding ConnectedDevicesList}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackLayout>
+                                            <Label
+                                                Text="{Binding .}" />
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                        </StackLayout>
+                    </ScrollView>
+                </Grid>
+            </ContentView>
+
+
+
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
