@@ -7,6 +7,6 @@ namespace ManageBluetooth.Interface
     {
         bool IsBluetoothEnabled();
         void ChangeBluetoothState();
-        Task<IEnumerable<string>> GetConnectedBluetoothDevices();
+        Task<IEnumerable<string>> GetConnectedOrKnowBluetoothDevices();
     }
 }

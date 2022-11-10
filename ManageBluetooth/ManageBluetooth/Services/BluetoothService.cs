@@ -44,13 +44,16 @@ namespace ManageBluetooth.Services
             {
                 case BluetoothState.On:
                     this.BluetoothEnabled = true;
+                    MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetootStateChanged, this.BluetoothEnabled);
+                    break;
+                case BluetoothState.Off:
+                    this.BluetoothEnabled = false;
+                    MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetootStateChanged, this.BluetoothEnabled);
                     break;
                 default:
                     this.BluetoothEnabled = false;
                     break;
             }
-
-            MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetootStateChanged, this.BluetoothEnabled);
         }
 
         public bool IsBluetoothEnabled()
@@ -70,7 +73,7 @@ namespace ManageBluetooth.Services
             }
         }
 
-        public async Task<IEnumerable<string>> GetConnectedBluetoothDevices()
+        public async Task<IEnumerable<string>> GetConnectedOrKnowBluetoothDevices()
         {
             var devicesNames = new List<string>();
 

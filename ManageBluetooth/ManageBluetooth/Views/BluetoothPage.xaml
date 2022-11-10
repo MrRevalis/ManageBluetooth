@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:cu="clr-namespace:ManageBluetooth.Custom"
     xmlns:const="clr-namespace:ManageBluetooth.Models.Constants"
-    xmlns:cv="clr-namespace:ManageBluetooth.Converters"
     xmlns:res="clr-namespace:ManageBluetooth.Resources"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     x:Class="ManageBluetooth.Views.BluetoothPage">
@@ -14,6 +13,32 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <NavigationPage.TitleView>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                Text="{StaticResource ApplicationName}"
+                FontSize="Body"
+                FontAttributes="Bold"
+                Grid.Column="0" />
+            <Label
+                Text="{xct:Translate Scan}"
+                HorizontalOptions="End"
+                Padding="10, 0"
+                Grid.Column="1" />
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Behaviors>
+        <xct:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding PageAppearingCommand}" />
+    </ContentPage.Behaviors>
+    
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -60,9 +85,13 @@
                         IsToggled="{Binding IsBluetoothEnabled}"
                         OnColor="#F6F6F6"
                         ThumbColor="White"
-                        xct:TouchEffect.Command="{Binding ChangeBluetoothStatusCommand}"
                         HorizontalOptions="End"
                         Grid.Column="1">
+                        <Switch.Behaviors>
+                            <xct:EventToCommandBehavior
+                                EventName="Toggled"
+                                Command="{Binding ChangeBluetoothStatusCommand}"/>
+                        </Switch.Behaviors>
                     </Switch>
                 </Grid>
                 <cu:RoundedCustomFrame.Style>
@@ -92,33 +121,38 @@
 
             <ContentView
                 Grid.Row="1">
-                <Grid>
-                    <ScrollView>
-                        <StackLayout>
-                            <Label
-                                Text="{Binding IsBluetoothEnabledMessage.Localized}"
-                                FontSize="Body"
-                                Padding="10" />
-                            <StackLayout
-                                IsVisible="{Binding IsBluetoothEnabled}"
-                                BindableLayout.ItemsSource="{Binding ConnectedDevicesList}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackLayout>
-                                            <Label
-                                                Text="{Binding .}" />
-                                        </StackLayout>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
+                <ScrollView>
+                    <StackLayout>
+                        <Label
+                            Text="{Binding IsBluetoothEnabledMessage.Localized}"
+                            FontSize="Body"
+                            Padding="10" />
+                        <cu:RoundedCustomFrame
+                            IsVisible="{Binding IsBluetoothEnabled}"
+                            CornerRadius="20"
+                            BackgroundColor="White">
+                            <StackLayout>
+                                <Label 
+                                    Text="{xct:Translate ConnectedDevices}"
+                                    Padding="0"
+                                    FontSize="Body"
+                                    FontAttributes="Bold"/>
+                                <StackLayout
+                                    BindableLayout.ItemsSource="{Binding ConnectedDevicesList}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackLayout>
+                                                <Label
+                                            Text="{Binding .}" />
+                                            </StackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
                             </StackLayout>
-
-                        </StackLayout>
-                    </ScrollView>
-                </Grid>
+                        </cu:RoundedCustomFrame>
+                    </StackLayout>
+                </ScrollView>
             </ContentView>
-
-
-
         </Grid>
     </ContentPage.Content>
 </ContentPage>

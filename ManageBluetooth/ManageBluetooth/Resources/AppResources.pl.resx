@@ -132,4 +132,10 @@
   <data name="ConnectedDevices" xml:space="preserve">
     <value>Połączone urządzenia</value>
   </data>
+  <data name="Scan" xml:space="preserve">
+    <value>Skanuj</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Zatrzymaj</value>
+  </data>
 </root>

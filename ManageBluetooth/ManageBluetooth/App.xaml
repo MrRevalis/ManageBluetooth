@@ -13,11 +13,18 @@
                     Value="#F6F6F6" />
             </Style>
             <Style
-                TargetType="NavigationPage">
+                TargetType="NavigationPage"
+                ApplyToDerivedTypes="True">
                 <Setter
                     Property="BarBackgroundColor"
                     Value="#F6F6F6" />
+                <Setter
+                    Property="BarTextColor"
+                    Value="Black" />
             </Style>
+
+            <x:String x:Key="ApplicationName">Bluetooth</x:String>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
