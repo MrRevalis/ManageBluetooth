@@ -26,7 +26,8 @@
                 Grid.Column="0" />
             <Label
                 Text="{Binding StartStopScan.Localized}"
-                IsVisible="{Binding IsBluetoothScanning}"
+                IsVisible="{Binding IsBluetoothEnabled}"
+                xct:TouchEffect.Command="{Binding StartStopScanningCommand}"
                 HorizontalOptions="End"
                 Padding="10, 0"
                 Grid.Column="1" />
@@ -144,6 +145,7 @@
                                     Text="{xct:Translate ConnectedDevices}"
                                     Padding="0"
                                     FontSize="Body"
+                                    TextColor="Black"
                                     FontAttributes="Bold"/>
                                 <StackLayout
                                     BindableLayout.ItemsSource="{Binding ConnectedDevicesList}">
@@ -152,6 +154,24 @@
                                             <StackLayout>
                                                 <Label
                                                     Text="{Binding .}" />
+                                            </StackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+
+                                <Label 
+                                    Text="{xct:Translate AvailableDevices}"
+                                    Padding="0"
+                                    FontSize="Body"
+                                    TextColor="Black"
+                                    FontAttributes="Bold"/>
+                                <StackLayout
+                                    BindableLayout.ItemsSource="{Binding AvailableDevices}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackLayout>
+                                                <Label
+                                                    Text="{Binding DeviceName}" />
                                             </StackLayout>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>

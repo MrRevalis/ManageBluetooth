@@ -117,12 +117,16 @@
     <value>Connected devices</value>
     <comment>Connected devices</comment>
   </data>
-  <data name="Scan" xml:space="preserve">
-    <value>Scan</value>
-    <comment>Scan</comment>
+  <data name="AvailableDevices" xml:space="preserve">
+    <value>Available devices</value>
+    <comment>Available devices</comment>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
     <comment>Stop</comment>
+  </data>
+  <data name="Scan" xml:space="preserve">
+    <value>Scan</value>
+    <comment>Scan</comment>
   </data>
 </root>

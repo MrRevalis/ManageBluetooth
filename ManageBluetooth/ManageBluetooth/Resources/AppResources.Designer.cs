@@ -61,6 +61,15 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available devices.
+        /// </summary>
+        internal static string AvailableDevices {
+            get {
+                return ResourceManager.GetString("AvailableDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Turn on Bluetooth to connect to nearby devices..
         /// </summary>
         internal static string BluetoothDisabled {
