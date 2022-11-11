@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ManageBluetooth.Interface
 {
@@ -7,6 +6,8 @@ namespace ManageBluetooth.Interface
     {
         bool IsBluetoothEnabled();
         void ChangeBluetoothState();
-        Task<IEnumerable<string>> GetConnectedOrKnowBluetoothDevices();
+        IEnumerable<string> GetConnectedOrKnowBluetoothDevices();
+        void StartScanningForBluetoothDevices();
+        void StopScanningForBluetoothDevices();
     }
 }

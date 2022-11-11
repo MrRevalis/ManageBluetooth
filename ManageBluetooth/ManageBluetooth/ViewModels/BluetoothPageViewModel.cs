@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 using ManageBluetooth.Extensions;
@@ -50,32 +49,73 @@ namespace ManageBluetooth.ViewModels
             set => SetProperty(ref bluetoothState, value);
         }
 
+        private LocalizedString startStopScan;
+        public LocalizedString StartStopScan
+        {
+            get => startStopScan;
+            set => SetProperty(ref startStopScan, value);
+        }
+
+        private bool isBluetoothScanning;
+        public bool IsBluetoothScanning
+        {
+            get => isBluetoothScanning;
+            set
+            {
+                if (value == isBluetoothScanning)
+                {
+                    return;
+                }
+                SetProperty(ref isBluetoothScanning, value);
+                // zmienic na inna metode, zeby wszystko nie było robione eeee
+                UpdateBluetoothProperties();
+            }
+        }
+
         public ICommand ChangeBluetoothStatusCommand { get; set; }
         public ICommand PageAppearingCommand { get; set; }
 
         public BluetoothPageViewModel(IBluetoothService bluetoothService)
         {
-            this._bluetoothService = bluetoothService;
+            _bluetoothService = bluetoothService;
 
             ConnectedDevicesList = new ObservableCollection<string>();
-            IsBluetoothEnabled = this._bluetoothService.IsBluetoothEnabled();
+            IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
 
             ChangeBluetoothStatusCommand = new Command(ChangeBluetoothState);
             PageAppearingCommand = new Command(PageAppearing);
 
-            this.SetUpMessaginCenter();
+            PopulateList();
+            SetUpMessaginCenter();
         }
 
         private void PageAppearing()
         {
             // IsBluetoothEnabled = this._bluetoothService.IsBluetoothEnabled();
+            // IsBluetoothScanning = false;
         }
 
         private void UpdateBluetoothProperties()
         {
-            this.CreateBluetoothStateLabel();
-            this.CreateBluetoothEnabledMessage();
-            this.PopulateList();
+            if (IsBluetoothEnabled)
+            {
+                IsBluetoothEnabledMessage = new LocalizedString(() => string.Format(AppResources.BluetoothEnabled, DeviceInfo.Name));
+                BluetoothState = new LocalizedString(() => AppResources.Enabled);
+
+                if (IsBluetoothScanning)
+                {
+                    StartStopScan = new LocalizedString(() => AppResources.Stop);
+                }
+                else
+                {
+                    StartStopScan = new LocalizedString(() => AppResources.Scan);
+                }
+            }
+            else
+            {
+                IsBluetoothEnabledMessage = new LocalizedString(() => string.Format(AppResources.BluetoothDisabled, DeviceInfo.Name));
+                BluetoothState = new LocalizedString(() => AppResources.Disabled);
+            }
         }
 
         private void ChangeBluetoothState()
@@ -86,7 +126,7 @@ namespace ManageBluetooth.ViewModels
             }
 
             IsBusy = true;
-            this._bluetoothService.ChangeBluetoothState();
+            _bluetoothService.ChangeBluetoothState();
             IsBusy = false;
         }
 
@@ -94,43 +134,35 @@ namespace ManageBluetooth.ViewModels
         {
             MessagingCenter.Subscribe<BluetoothService, bool>(this, BluetoothCommandConstants.BluetootStateChanged, (sender, arg) =>
             {
-                this.IsBluetoothEnabled = arg;
+                IsBluetoothEnabled = arg;
+                PopulateList();
+            });
+
+            MessagingCenter.Subscribe<BluetoothService, string>(this, BluetoothCommandConstants.BluetootDeviceDiscovered, (sender, arg) =>
+            {
+                ConnectedDevicesList.Add(arg);
+            });
+
+            MessagingCenter.Subscribe<BluetoothService, bool>(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, (sender, arg) =>
+            {
+                IsBluetoothScanning = arg;
             });
         }
 
-        private void CreateBluetoothEnabledMessage()
+        private void PopulateList()
         {
-            if (this._bluetoothService.IsBluetoothEnabled())
+            if (IsBluetoothEnabled)
             {
-                this.IsBluetoothEnabledMessage = new LocalizedString(() => string.Format(AppResources.BluetoothEnabled, DeviceInfo.Name));
-            }
-            else
-            {
-                this.IsBluetoothEnabledMessage = new LocalizedString(() => string.Format(AppResources.BluetoothDisabled, DeviceInfo.Name));
-            }
-        }
-
-        private void CreateBluetoothStateLabel()
-        {
-            if (this._bluetoothService.IsBluetoothEnabled())
-            {
-                this.BluetoothState = new LocalizedString(() => AppResources.Enabled);
-            }
-            else
-            {
-                this.BluetoothState = new LocalizedString(() => AppResources.Disabled);
-            }
-        }
-
-        private async Task PopulateList()
-        {
-            if (this._bluetoothService.IsBluetoothEnabled())
-            {
-                var connectedOrKnowDevices = await this._bluetoothService.GetConnectedOrKnowBluetoothDevices();
+                var connectedOrKnowDevices = this._bluetoothService.GetConnectedOrKnowBluetoothDevices();
+                IsBluetoothScanning = true;
+                _bluetoothService.StartScanningForBluetoothDevices();
                 ConnectedDevicesList.AddRange(connectedOrKnowDevices);
+                //ConnectedDevicesList.AddRange(qwe);
             }
             else
             {
+                _bluetoothService.StopScanningForBluetoothDevices();
+                IsBluetoothScanning = false;
                 ConnectedDevicesList.Clear();
             }
         }

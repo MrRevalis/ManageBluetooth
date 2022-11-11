@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:cu="clr-namespace:ManageBluetooth.Custom"
     xmlns:const="clr-namespace:ManageBluetooth.Models.Constants"
-    xmlns:res="clr-namespace:ManageBluetooth.Resources"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     x:Class="ManageBluetooth.Views.BluetoothPage">
 
@@ -26,7 +25,8 @@
                 FontAttributes="Bold"
                 Grid.Column="0" />
             <Label
-                Text="{xct:Translate Scan}"
+                Text="{Binding StartStopScan.Localized}"
+                IsVisible="{Binding IsBluetoothScanning}"
                 HorizontalOptions="End"
                 Padding="10, 0"
                 Grid.Column="1" />
@@ -42,14 +42,17 @@
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition
+                    Height="Auto"/>
+                <RowDefinition 
+                    Height="*"/>
             </Grid.RowDefinitions>
             <cu:RoundedCustomFrame
                 Grid.Row="0"
                 CornerRadius="0, 0, 20, 20">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
@@ -82,17 +85,22 @@
                         </Label.Style>
                     </Label>
                     <Switch
+                        VerticalOptions="Start"
                         IsToggled="{Binding IsBluetoothEnabled}"
                         OnColor="#F6F6F6"
                         ThumbColor="White"
-                        HorizontalOptions="End"
-                        Grid.Column="1">
+                        Grid.Column="2">
                         <Switch.Behaviors>
                             <xct:EventToCommandBehavior
                                 EventName="Toggled"
-                                Command="{Binding ChangeBluetoothStatusCommand}"/>
+                                Command="{Binding ChangeBluetoothStatusCommand}" />
                         </Switch.Behaviors>
                     </Switch>
+                    <ActivityIndicator
+                        Grid.Column="2"
+                        HeightRequest="1"
+                        Color="White"
+                        IsRunning="{Binding IsBluetoothScanning}" />
                 </Grid>
                 <cu:RoundedCustomFrame.Style>
                     <Style
@@ -143,7 +151,7 @@
                                         <DataTemplate>
                                             <StackLayout>
                                                 <Label
-                                            Text="{Binding .}" />
+                                                    Text="{Binding .}" />
                                             </StackLayout>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using Android.Bluetooth;
 
@@ -21,6 +20,8 @@ namespace ManageBluetooth.Services
 
         private readonly BluetoothManager _manager;
 
+        private List<string> DeviceList { get; set; }
+
         public bool BluetoothEnabled { get; set; }
 
         public BluetoothService()
@@ -30,7 +31,22 @@ namespace ManageBluetooth.Services
 
             this._manager = (BluetoothManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.BluetoothService);
 
+            this.DeviceList = new List<string>();
+
             this._bluetooth.StateChanged += BluetootStateChanged;
+            this._adapter.DeviceDiscovered += BluetoothDeviceDiscovered;
+            this._adapter.ScanTimeoutElapsed += BluetoothScanTimeoutElapsed;
+        }
+
+        private void BluetoothScanTimeoutElapsed(object sender, System.EventArgs e)
+        {
+            MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, false);
+
+        }
+
+        private void BluetoothDeviceDiscovered(object sender, DeviceEventArgs e)
+        {
+            MessagingCenter.Send<BluetoothService, string>(this, BluetoothCommandConstants.BluetootDeviceDiscovered, e.Device.Name);
         }
 
         ~BluetoothService()
@@ -73,7 +89,7 @@ namespace ManageBluetooth.Services
             }
         }
 
-        public async Task<IEnumerable<string>> GetConnectedOrKnowBluetoothDevices()
+        public IEnumerable<string> GetConnectedOrKnowBluetoothDevices()
         {
             var devicesNames = new List<string>();
 
@@ -85,6 +101,18 @@ namespace ManageBluetooth.Services
             }
 
             return devicesNames;
+        }
+
+        public async void StartScanningForBluetoothDevices()
+        {
+            this._adapter.ScanTimeout = 15000;
+            this._adapter.ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode.LowLatency;
+            await this._adapter.StartScanningForDevicesAsync();
+        }
+
+        public async void StopScanningForBluetoothDevices()
+        {
+            await this._adapter.StopScanningForDevicesAsync();
         }
     }
 }
