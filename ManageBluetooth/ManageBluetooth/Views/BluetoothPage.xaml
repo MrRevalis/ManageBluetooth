@@ -5,20 +5,17 @@
     xmlns:cu="clr-namespace:ManageBluetooth.Custom"
     xmlns:const="clr-namespace:ManageBluetooth.Models.Constants"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    x:Class="ManageBluetooth.Views.BluetoothPage">
-
+    x:Class="ManageBluetooth.Views.BluetoothPage"
+    xmlns:control="clr-namespace:ManageBluetooth.Custom.Controls">
     <ContentPage.Resources>
-        <ResourceDictionary>
-        </ResourceDictionary>
+        <ResourceDictionary></ResourceDictionary>
     </ContentPage.Resources>
-
     <NavigationPage.TitleView>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-
             <Label
                 Text="{StaticResource ApplicationName}"
                 FontSize="Body"
@@ -33,20 +30,18 @@
                 Grid.Column="1" />
         </Grid>
     </NavigationPage.TitleView>
-
     <ContentPage.Behaviors>
         <xct:EventToCommandBehavior
             EventName="Appearing"
             Command="{Binding PageAppearingCommand}" />
     </ContentPage.Behaviors>
-    
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition
-                    Height="Auto"/>
-                <RowDefinition 
-                    Height="*"/>
+                    Height="Auto" />
+                <RowDefinition
+                    Height="*" />
             </Grid.RowDefinitions>
             <cu:RoundedCustomFrame
                 Grid.Row="0"
@@ -127,7 +122,6 @@
                     </Style>
                 </cu:RoundedCustomFrame.Style>
             </cu:RoundedCustomFrame>
-
             <ContentView
                 Grid.Row="1">
                 <ScrollView>
@@ -141,41 +135,18 @@
                             CornerRadius="20"
                             BackgroundColor="White">
                             <StackLayout>
-                                <Label 
+                                <Label
                                     Text="{xct:Translate ConnectedDevices}"
-                                    Padding="0"
                                     FontSize="Body"
-                                    TextColor="Black"
-                                    FontAttributes="Bold"/>
-                                <StackLayout
-                                    BindableLayout.ItemsSource="{Binding ConnectedDevicesList}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackLayout>
-                                                <Label
-                                                    Text="{Binding .}" />
-                                            </StackLayout>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </StackLayout>
-
-                                <Label 
+                                    FontAttributes="Bold" />
+                                <control:BluetoothDevicesList
+                                    Devices="{Binding ConnectedDevicesList}" />
+                                <Label
                                     Text="{xct:Translate AvailableDevices}"
-                                    Padding="0"
                                     FontSize="Body"
-                                    TextColor="Black"
-                                    FontAttributes="Bold"/>
-                                <StackLayout
-                                    BindableLayout.ItemsSource="{Binding AvailableDevices}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackLayout>
-                                                <Label
-                                                    Text="{Binding DeviceName}" />
-                                            </StackLayout>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </StackLayout>
+                                    FontAttributes="Bold" />
+                                <control:BluetoothDevicesList
+                                    Devices="{Binding AvailableDevicesList}" />
                             </StackLayout>
                         </cu:RoundedCustomFrame>
                     </StackLayout>

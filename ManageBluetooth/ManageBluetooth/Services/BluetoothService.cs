@@ -24,6 +24,8 @@ namespace ManageBluetooth.Services
 
         private readonly BluetoothManager _manager;
 
+        private readonly int ScanTimeout = 15000;
+
         private List<IDevice> DiscoveredDeviceList { get; set; }
         private List<IDevice> ConnectedDevices { get; set; }
 
@@ -34,14 +36,15 @@ namespace ManageBluetooth.Services
 
             this._manager = (BluetoothManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.BluetoothService);
 
-            this._adapter.ScanMode = ScanMode.LowLatency;
-
             this.DiscoveredDeviceList = new List<IDevice>();
             this.ConnectedDevices = new List<IDevice>();
 
             this._bluetooth.StateChanged += BluetootStateChanged;
             this._adapter.DeviceDiscovered += BluetoothDeviceDiscovered;
             this._adapter.ScanTimeoutElapsed += BluetoothScanTimeoutElapsed;
+
+            this._adapter.ScanTimeout = this.ScanTimeout;
+            this._adapter.ScanMode = ScanMode.LowLatency;
         }
 
         ~BluetoothService()
@@ -60,24 +63,24 @@ namespace ManageBluetooth.Services
         {
             if (IsBluetoothEnabled())
             {
-                _manager.Adapter.Disable();
+                this._manager.Adapter.Disable();
             }
             else
             {
-                _manager.Adapter.Enable();
+                this._manager.Adapter.Enable();
             }
         }
 
-        public IEnumerable<string> GetConnectedOrKnowBluetoothDevices()
+        public IEnumerable<SimpleBluetoothDevice> GetConnectedOrKnowBluetoothDevices()
         {
-            var devicesNames = new List<string>();
+            var devicesNames = new List<SimpleBluetoothDevice>();
 
             var systemDevices = _adapter.GetSystemConnectedOrPairedDevices();
 
             foreach (var device in systemDevices)
             {
                 this.ConnectedDevices.Add(device);
-                devicesNames.Add(device.Name);
+                devicesNames.Add(IDeviceConverter.ConvertToSimpleBluetoothDevice(device));
             }
 
             return devicesNames;
@@ -85,7 +88,6 @@ namespace ManageBluetooth.Services
 
         public async void StartScanningForBluetoothDevices()
         {
-            this._adapter.ScanTimeout = 15000;
             await this._adapter.StartScanningForDevicesAsync();
         }
 
@@ -96,8 +98,7 @@ namespace ManageBluetooth.Services
 
         private void BluetoothScanTimeoutElapsed(object sender, System.EventArgs e)
         {
-            MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, false);
-
+            MessagingCenter.Send(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, false);
         }
 
         private void BluetoothDeviceDiscovered(object sender, DeviceEventArgs e)
@@ -108,7 +109,7 @@ namespace ManageBluetooth.Services
                 this.DiscoveredDeviceList.Add(e.Device);
                 var bluetoothDevice = IDeviceConverter.ConvertToSimpleBluetoothDevice(e.Device);
 
-                MessagingCenter.Send<BluetoothService, SimpleBluetoothDevice>(this, BluetoothCommandConstants.BluetootDeviceDiscovered, bluetoothDevice);
+                MessagingCenter.Send(this, BluetoothCommandConstants.BluetootDeviceDiscovered, bluetoothDevice);
             }
         }
 
@@ -117,10 +118,10 @@ namespace ManageBluetooth.Services
             switch (e.NewState)
             {
                 case BluetoothState.On:
-                    MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetootStateChanged, true);
+                    MessagingCenter.Send(this, BluetoothCommandConstants.BluetootStateChanged, true);
                     break;
                 case BluetoothState.Off:
-                    MessagingCenter.Send<BluetoothService, bool>(this, BluetoothCommandConstants.BluetootStateChanged, false);
+                    MessagingCenter.Send(this, BluetoothCommandConstants.BluetootStateChanged, false);
                     break;
                 default:
                     break;

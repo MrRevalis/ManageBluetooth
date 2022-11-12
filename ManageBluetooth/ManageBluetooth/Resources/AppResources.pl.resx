@@ -141,4 +141,7 @@
   <data name="Scan" xml:space="preserve">
     <value>Skanuj</value>
   </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>Brak urządzeń</value>
+  </data>
 </root>

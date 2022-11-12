@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:converter="clr-namespace:ManageBluetooth.Converters"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    x:Class="ManageBluetooth.Custom.Controls.BluetoothDevicesList"
+    BindableLayout.ItemsSource="{Binding Devices, Source={x:Reference this}}"
+    BindableLayout.EmptyView="{xct:Translate NoDevices}"
+    x:Name="this">
+    <StackLayout.Resources>
+        <ResourceDictionary>
+            <converter:BluetoothDeviceClassConverter
+                x:Key="BluetoothDeviceClassConverter" />
+            <converter:SeparatorVisibilityConverter
+                x:Key="SeparatorVisibilityConverter" />
+        </ResourceDictionary>
+    </StackLayout.Resources>
+    <BindableLayout.ItemTemplate>
+        <DataTemplate>
+            <Grid
+                Padding="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition
+                        Height="1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="1*" />
+                    <ColumnDefinition
+                        Width="7*" />
+                </Grid.ColumnDefinitions>
+                <Image
+                    VerticalOptions="Center"
+                    HorizontalOptions="Start"
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    <Image.Source>
+                        <FontImageSource
+                            FontFamily="FAS"
+                            Color="Black"
+                            Glyph="{Binding DeviceClass, Converter={x:StaticResource BluetoothDeviceClassConverter}}" />
+                    </Image.Source>
+                </Image>
+                <Label
+                    Text="{Binding DeviceName}"
+                    TextColor="Black"
+                    FontSize="Body"
+                    VerticalTextAlignment="Center"
+                    Grid.Column="1"
+                    Grid.Row="0" />
+                <BoxView
+                    IsVisible="{Binding Path=., Converter={x:StaticResource SeparatorVisibilityConverter}, ConverterParameter={x:Reference Name=this}}"
+                    HeightRequest="1"
+                    Color="#DDDDDD"
+                    Grid.Row="1"
+                    Grid.Column="1" />
+            </Grid>
+        </DataTemplate>
+    </BindableLayout.ItemTemplate>
+</StackLayout>  

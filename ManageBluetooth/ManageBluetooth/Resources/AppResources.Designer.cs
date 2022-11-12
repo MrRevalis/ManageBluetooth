@@ -65,7 +65,7 @@ namespace ManageBluetooth.Resources {
         /// </summary>
         internal static string AvailableDevices {
             get {
-                return ResourceManager.GetString("AvailableDevices", resourceCulture);
+                return ResourceManager.GetString("AvailableDevicesList", resourceCulture);
             }
         }
         
@@ -111,6 +111,15 @@ namespace ManageBluetooth.Resources {
         internal static string Enabled {
             get {
                 return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No devices.
+        /// </summary>
+        internal static string NoDevices {
+            get {
+                return ResourceManager.GetString("NoDevices", resourceCulture);
             }
         }
         

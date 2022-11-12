@@ -18,8 +18,14 @@ namespace ManageBluetooth.ViewModels
     public class BluetoothPageViewModel : BaseViewModel
     {
         private readonly IBluetoothService _bluetoothService;
-        public ObservableCollection<string> ConnectedDevicesList { get; set; }
-        public ObservableCollection<SimpleBluetoothDevice> AvailableDevices { get; set; }
+        public ObservableCollection<SimpleBluetoothDevice> ConnectedDevicesList { get; set; }
+
+        private ObservableCollection<SimpleBluetoothDevice> availableDevicesList;
+        public ObservableCollection<SimpleBluetoothDevice> AvailableDevicesList
+        {
+            get => availableDevicesList;
+            set => SetProperty(ref availableDevicesList, value);
+        }
 
         private bool isBluetoothEnabled;
         public bool IsBluetoothEnabled
@@ -75,15 +81,14 @@ namespace ManageBluetooth.ViewModels
 
         public ICommand ChangeBluetoothStatusCommand { get; set; }
         public ICommand PageAppearingCommand { get; set; }
-
         public ICommand StartStopScanningCommand { get; set; }
 
         public BluetoothPageViewModel(IBluetoothService bluetoothService)
         {
             _bluetoothService = bluetoothService;
 
-            ConnectedDevicesList = new ObservableCollection<string>();
-            AvailableDevices = new ObservableCollection<SimpleBluetoothDevice>();
+            ConnectedDevicesList = new ObservableCollection<SimpleBluetoothDevice>();
+            AvailableDevicesList = new ObservableCollection<SimpleBluetoothDevice>();
 
             IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
 
@@ -161,7 +166,8 @@ namespace ManageBluetooth.ViewModels
 
             MessagingCenter.Subscribe<BluetoothService, SimpleBluetoothDevice>(this, BluetoothCommandConstants.BluetootDeviceDiscovered, (sender, arg) =>
             {
-                AvailableDevices.Add(arg);
+                AvailableDevicesList.Add(arg);
+                AvailableDevicesList = new ObservableCollection<SimpleBluetoothDevice>(AvailableDevicesList);
             });
 
             MessagingCenter.Subscribe<BluetoothService, bool>(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, (sender, arg) =>
@@ -184,7 +190,7 @@ namespace ManageBluetooth.ViewModels
                 _bluetoothService.StopScanningForBluetoothDevices();
                 IsBluetoothScanning = false;
                 ConnectedDevicesList.Clear();
-                AvailableDevices.Clear();
+                AvailableDevicesList.Clear();
             }
         }
     }

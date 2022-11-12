@@ -129,4 +129,8 @@
     <value>Scan</value>
     <comment>Scan</comment>
   </data>
+  <data name="NoDevices" xml:space="preserve">
+    <value>No devices</value>
+    <comment>No devices</comment>
+  </data>
 </root>
