@@ -27,7 +27,7 @@ namespace ManageBluetooth.Services
         private readonly int ScanTimeout = 15000;
 
         private List<IDevice> DiscoveredDeviceList { get; set; }
-        private List<IDevice> ConnectedDevices { get; set; }
+        private List<IDevice> ConnectedDevicesList { get; set; }
 
         public BluetoothService()
         {
@@ -37,7 +37,7 @@ namespace ManageBluetooth.Services
             this._manager = (BluetoothManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.BluetoothService);
 
             this.DiscoveredDeviceList = new List<IDevice>();
-            this.ConnectedDevices = new List<IDevice>();
+            this.ConnectedDevicesList = new List<IDevice>();
 
             this._bluetooth.StateChanged += BluetootStateChanged;
             this._adapter.DeviceDiscovered += BluetoothDeviceDiscovered;
@@ -59,11 +59,15 @@ namespace ManageBluetooth.Services
             return this._bluetooth.IsOn;
         }
 
-        public void ChangeBluetoothState()
+        public async void ChangeBluetoothState()
         {
             if (IsBluetoothEnabled())
             {
+                await this._adapter.StopScanningForDevicesAsync();
                 this._manager.Adapter.Disable();
+
+                this.DiscoveredDeviceList.Clear();
+                this.ConnectedDevicesList.Clear();
             }
             else
             {
@@ -73,17 +77,16 @@ namespace ManageBluetooth.Services
 
         public IEnumerable<SimpleBluetoothDevice> GetConnectedOrKnowBluetoothDevices()
         {
-            var devicesNames = new List<SimpleBluetoothDevice>();
+            var devices = new List<SimpleBluetoothDevice>();
+            var connectedOrPairedDevices = this._adapter.GetSystemConnectedOrPairedDevices();
 
-            var systemDevices = _adapter.GetSystemConnectedOrPairedDevices();
-
-            foreach (var device in systemDevices)
+            foreach (var device in connectedOrPairedDevices)
             {
-                this.ConnectedDevices.Add(device);
-                devicesNames.Add(IDeviceConverter.ConvertToSimpleBluetoothDevice(device));
+                this.ConnectedDevicesList.Add(device);
+                devices.Add(IDeviceConverter.ConvertToSimpleBluetoothDevice(device));
             }
 
-            return devicesNames;
+            return devices;
         }
 
         public async void StartScanningForBluetoothDevices()
@@ -96,8 +99,10 @@ namespace ManageBluetooth.Services
             await this._adapter.StopScanningForDevicesAsync();
         }
 
-        private void BluetoothScanTimeoutElapsed(object sender, System.EventArgs e)
+        private async void BluetoothScanTimeoutElapsed(object sender, System.EventArgs e)
         {
+            await this._adapter.StopScanningForDevicesAsync();
+
             MessagingCenter.Send(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, false);
         }
 
@@ -126,6 +131,11 @@ namespace ManageBluetooth.Services
                 default:
                     break;
             }
+        }
+
+        public bool IsBluetoothScanning()
+        {
+            return this._adapter.IsScanning;
         }
     }
 }

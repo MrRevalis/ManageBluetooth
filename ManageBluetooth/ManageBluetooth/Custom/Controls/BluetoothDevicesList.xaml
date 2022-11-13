@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <StackLayout
+    x:Class="ManageBluetooth.Custom.Controls.BluetoothDevicesList"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:converter="clr-namespace:ManageBluetooth.Converters"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    x:Class="ManageBluetooth.Custom.Controls.BluetoothDevicesList"
     BindableLayout.ItemsSource="{Binding Devices, Source={x:Reference this}}"
     BindableLayout.EmptyView="{xct:Translate NoDevices}"
     x:Name="this">
@@ -19,7 +19,10 @@
     <BindableLayout.ItemTemplate>
         <DataTemplate>
             <Grid
-                Padding="5">
+                Padding="5"
+                HeightRequest="50"
+                xct:TouchEffect.NativeAnimation="True"
+                xct:TouchEffect.NativeAnimationColor="{StaticResource DarkBlue}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition
@@ -34,6 +37,7 @@
                 <Image
                     VerticalOptions="Center"
                     HorizontalOptions="Start"
+                    Margin="5, 0"
                     Grid.Column="0"
                     Grid.Row="0">
                     <Image.Source>

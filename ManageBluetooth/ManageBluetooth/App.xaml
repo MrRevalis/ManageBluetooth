@@ -24,7 +24,8 @@
             </Style>
 
             <x:String x:Key="ApplicationName">Bluetooth</x:String>
-
+            <Color
+                x:Key="DarkBlue">#000256</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:cu="clr-namespace:ManageBluetooth.Custom"
-    xmlns:const="clr-namespace:ManageBluetooth.Models.Constants"
-    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     x:Class="ManageBluetooth.Views.BluetoothPage"
-    xmlns:control="clr-namespace:ManageBluetooth.Custom.Controls">
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:control="clr-namespace:ManageBluetooth.Custom.Controls"
+    xmlns:cu="clr-namespace:ManageBluetooth.Custom"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <ContentPage.Resources>
         <ResourceDictionary></ResourceDictionary>
     </ContentPage.Resources>
@@ -108,7 +107,7 @@
                                 Value="True">
                                 <Setter
                                     Property="BackgroundColor"
-                                    Value="{x:Static const:ColorValueConstants.DarkBlueColor}" />
+                                    Value="{StaticResource DarkBlue}" />
                             </DataTrigger>
                             <DataTrigger
                                 TargetType="cu:RoundedCustomFrame"
@@ -133,16 +132,19 @@
                         <cu:RoundedCustomFrame
                             IsVisible="{Binding IsBluetoothEnabled}"
                             CornerRadius="20"
+                            Padding="0"
                             BackgroundColor="White">
                             <StackLayout>
                                 <Label
                                     Text="{xct:Translate ConnectedDevices}"
+                                    Padding="10, 5"
                                     FontSize="Body"
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
                                     Devices="{Binding ConnectedDevicesList}" />
                                 <Label
                                     Text="{xct:Translate AvailableDevices}"
+                                    Padding="10, 5"
                                     FontSize="Body"
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
