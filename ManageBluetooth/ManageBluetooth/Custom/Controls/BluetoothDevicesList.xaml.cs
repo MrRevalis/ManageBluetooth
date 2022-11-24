@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 using ManageBluetooth.Models;
 
@@ -21,6 +22,19 @@ namespace ManageBluetooth.Custom.Controls
         {
             get => GetValue(DevicesProperty) as ObservableCollection<SimpleBluetoothDevice>;
             set => SetValue(DevicesProperty, value);
+        }
+
+        public static readonly BindableProperty ConnectWithDeviceCommandProperty =
+            BindableProperty.Create(
+                nameof(ConnectWithDeviceCommand),
+                typeof(ICommand),
+                typeof(BluetoothDevicesList),
+                default(ICommand));
+
+        public ICommand ConnectWithDeviceCommand
+        {
+            get => GetValue(ConnectWithDeviceCommandProperty) as ICommand;
+            set => SetValue(ConnectWithDeviceCommandProperty, value);
         }
 
         public BluetoothDevicesList()

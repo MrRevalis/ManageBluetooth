@@ -131,7 +131,7 @@
                             Padding="10" />
                         <cu:RoundedCustomFrame
                             IsVisible="{Binding IsBluetoothEnabled}"
-                            CornerRadius="20"
+                            CornerRadius="20, 20, 0, 0"
                             Padding="0"
                             BackgroundColor="White">
                             <StackLayout>
@@ -148,7 +148,8 @@
                                     FontSize="Body"
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
-                                    Devices="{Binding AvailableDevicesList}" />
+                                    Devices="{Binding AvailableDevicesList}"
+                                    ConnectWithDeviceCommand="{Binding ConnectWithUnknownDeviceCommand}"/>
                             </StackLayout>
                         </cu:RoundedCustomFrame>
                     </StackLayout>

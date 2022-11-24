@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using Android.Bluetooth;
 
@@ -8,8 +11,10 @@ using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
 
 using Plugin.BLE;
+using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BLE.Abstractions.Exceptions;
 
 using Xamarin.Forms;
 
@@ -136,6 +141,36 @@ namespace ManageBluetooth.Services
         public bool IsBluetoothScanning()
         {
             return this._adapter.IsScanning;
+        }
+
+        public async Task ConnectWithUnknownDevice(Guid deviceGuid)
+        {
+            var device = this.DiscoveredDeviceList.FirstOrDefault(x => x.Id == deviceGuid);
+
+            if (device == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (this.IsBluetoothScanning())
+                {
+                    this.StopScanningForBluetoothDevices();
+                }
+                var para = new ConnectParameters(true, false);
+
+                await device.UpdateRssiAsync();
+
+                await this._adapter.ConnectToDeviceAsync(device, para);
+                var bluetoothDevice = IDeviceConverter.ConvertToSimpleBluetoothDevice(device);
+
+                var qwe = "qwe;";
+            }
+            catch (DeviceConnectionException ex)
+            {
+                // Popup z bledem
+            }
         }
     }
 }

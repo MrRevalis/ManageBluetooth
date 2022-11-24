@@ -21,6 +21,8 @@
             <Grid
                 Padding="5"
                 HeightRequest="50"
+                xct:TouchEffect.Command="{Binding ConnectWithDeviceCommand, Source={x:Reference this}}"
+                xct:TouchEffect.CommandParameter="{Binding .}"
                 xct:TouchEffect.NativeAnimation="True"
                 xct:TouchEffect.NativeAnimationColor="{StaticResource DarkBlue}">
                 <Grid.RowDefinitions>

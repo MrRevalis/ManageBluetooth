@@ -87,6 +87,7 @@ namespace ManageBluetooth.ViewModels
         public ICommand ChangeBluetoothStatusCommand { get; set; }
         public ICommand PageAppearingCommand { get; set; }
         public ICommand StartStopScanningCommand { get; set; }
+        public ICommand ConnectWithUnknownDeviceCommand { get; set; }
 
         public BluetoothPageViewModel(IBluetoothService bluetoothService)
         {
@@ -99,10 +100,23 @@ namespace ManageBluetooth.ViewModels
 
             ChangeBluetoothStatusCommand = new Command(ChangeBluetoothState);
             StartStopScanningCommand = new Command(StartStopScanning);
+            ConnectWithUnknownDeviceCommand = new Command<SimpleBluetoothDevice>((device) => ConnectWithUnknownDevice(device));
 
             UpdateBluetoothProperties();
             StartStopBluetoothScanning();
             SetUpMessaginCenter();
+        }
+
+        private async void ConnectWithUnknownDevice(SimpleBluetoothDevice device)
+        {
+            if (!IsBluetoothEnabled
+                || device == null)
+            {
+                return;
+            }
+
+            await this._bluetoothService.ConnectWithUnknownDevice(device.DeviceId);
+
         }
 
         private void StartStopScanning()
