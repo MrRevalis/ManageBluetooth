@@ -10,7 +10,7 @@ namespace ManageBluetooth.Interface
     {
         bool IsBluetoothEnabled();
         void ChangeBluetoothState();
-        IEnumerable<SimpleBluetoothDevice> GetConnectedOrKnowBluetoothDevices();
+        IEnumerable<SimpleBluetoothDevice> GetBondedBluetoothDevices();
         void StartScanningForBluetoothDevices();
         void StopScanningForBluetoothDevices();
         bool IsBluetoothScanning();

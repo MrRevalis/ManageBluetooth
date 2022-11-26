@@ -24,7 +24,7 @@
                 xct:TouchEffect.Command="{Binding ConnectWithDeviceCommand, Source={x:Reference this}}"
                 xct:TouchEffect.CommandParameter="{Binding .}"
                 xct:TouchEffect.NativeAnimation="True"
-                xct:TouchEffect.NativeAnimationColor="{StaticResource DarkBlue}">
+                xct:TouchEffect.NativeAnimationColor="LightGray">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition
@@ -39,7 +39,7 @@
                 <Image
                     VerticalOptions="Center"
                     HorizontalOptions="Start"
-                    Margin="5, 0"
+                    Margin="20, 0, 0, 0"
                     Grid.Column="0"
                     Grid.Row="0">
                     <Image.Source>

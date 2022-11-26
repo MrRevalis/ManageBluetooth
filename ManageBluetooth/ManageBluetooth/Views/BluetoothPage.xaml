@@ -9,6 +9,13 @@
     <ContentPage.Resources>
         <ResourceDictionary></ResourceDictionary>
     </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <xct:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding PageAppearingCommand}" />
+    </ContentPage.Behaviors>
+
     <NavigationPage.TitleView>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -29,11 +36,7 @@
                 Grid.Column="1" />
         </Grid>
     </NavigationPage.TitleView>
-    <ContentPage.Behaviors>
-        <xct:EventToCommandBehavior
-            EventName="Appearing"
-            Command="{Binding PageAppearingCommand}" />
-    </ContentPage.Behaviors>
+
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -138,14 +141,15 @@
                                 <Label
                                     Text="{xct:Translate ConnectedDevices}"
                                     Padding="10, 5"
-                                    FontSize="Body"
+                                    FontSize="Small"
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
-                                    Devices="{Binding ConnectedDevicesList}" />
+                                    Devices="{Binding BondedDevicesList}"
+                                    ConnectWithDeviceCommand="{Binding ConnectWithBondedDeviceCommand}"/>
                                 <Label
                                     Text="{xct:Translate AvailableDevices}"
                                     Padding="10, 5"
-                                    FontSize="Body"
+                                    FontSize="Small"
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
                                     Devices="{Binding AvailableDevicesList}"

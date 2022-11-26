@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 using ManageBluetooth.Models;
@@ -16,7 +17,23 @@ namespace ManageBluetooth.Custom.Controls
                 nameof(Devices),
                 typeof(ObservableCollection<SimpleBluetoothDevice>),
                 typeof(BluetoothDevicesList),
-                default(ObservableCollection<SimpleBluetoothDevice>));
+                default(ObservableCollection<SimpleBluetoothDevice>),
+                propertyChanged: DevicesListChanged);
+
+        private static void DevicesListChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var newList = newValue as ObservableCollection<SimpleBluetoothDevice>;
+            var control = bindable as StackLayout;
+
+            if (!newList.Any())
+            {
+                control.Margin = new Thickness(0, 10, 0, 10);
+            }
+            else
+            {
+                control.Margin = new Thickness(0, 0, 0, 0);
+            }
+        }
 
         public ObservableCollection<SimpleBluetoothDevice> Devices
         {

@@ -1,9 +1,13 @@
 ﻿using Android;
 using Android.App;
+using Android.Bluetooth;
+using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
+
+using ManageBluetooth.Droid.Receiver;
 
 using Xamarin.CommunityToolkit.Helpers;
 
@@ -17,8 +21,18 @@ namespace ManageBluetooth.Droid
             Manifest.Permission.Bluetooth,
             Manifest.Permission.BluetoothAdmin,
             Manifest.Permission.AccessCoarseLocation,
-            Manifest.Permission.AccessFineLocation
+            Manifest.Permission.AccessFineLocation,
+            Manifest.Permission.BluetoothPrivileged,
         };
+
+        private readonly BluetoothDiscoveryActionReceiver _deviceDiscoverReceiver;
+        private readonly BluetoothDeviceConnectionStateReceiver _deviceConnectionStateReceiver;
+
+        public MainActivity()
+        {
+            this._deviceDiscoverReceiver = new BluetoothDiscoveryActionReceiver();
+            this._deviceConnectionStateReceiver = new BluetoothDeviceConnectionStateReceiver();
+        }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,6 +42,7 @@ namespace ManageBluetooth.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             CheckPermissions();
+            SetUpBluetoothSettings();
 
             LoadApplication(new App());
         }
@@ -41,8 +56,9 @@ namespace ManageBluetooth.Droid
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
-
-            var newCulture = !string.IsNullOrEmpty(newConfig.Locale.Language) ? newConfig.Locale.Language : "en";
+            // newConfig.Locale.Language
+            var locale = newConfig.Locales.Get(0);
+            var newCulture = !string.IsNullOrEmpty(locale.Language) ? locale.Language : "en";
             LocalizationResourceManager.Current.CurrentCulture = new System.Globalization.CultureInfo(newCulture);
         }
 
@@ -62,6 +78,21 @@ namespace ManageBluetooth.Droid
             {
                 RequestPermissions(Permissions, 0);
             }
+        }
+
+        private void SetUpBluetoothSettings()
+        {
+            var discoveryStarted = new IntentFilter(BluetoothAdapter.ActionDiscoveryStarted);
+            var discoveryFinished = new IntentFilter(BluetoothAdapter.ActionDiscoveryFinished);
+            RegisterReceiver(this._deviceDiscoverReceiver, discoveryStarted);
+            RegisterReceiver(this._deviceDiscoverReceiver, discoveryFinished);
+
+            var actionAclConnected = new IntentFilter(BluetoothDevice.ActionAclConnected);
+            var actionAclDisconnected = new IntentFilter(BluetoothDevice.ActionAclDisconnected);
+            var actionAclDisconnectRequested = new IntentFilter(BluetoothDevice.ActionAclDisconnectRequested);
+            RegisterReceiver(this._deviceConnectionStateReceiver, actionAclConnected);
+            RegisterReceiver(this._deviceConnectionStateReceiver, actionAclDisconnected);
+            RegisterReceiver(this._deviceConnectionStateReceiver, actionAclDisconnectRequested);
         }
     }
 }

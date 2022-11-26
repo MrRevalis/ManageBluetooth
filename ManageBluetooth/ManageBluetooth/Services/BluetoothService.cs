@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-using Android.Bluetooth;
-
-using ManageBluetooth.Converters;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
 
 using Plugin.BLE;
-using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
-using Plugin.BLE.Abstractions.Exceptions;
 
 using Xamarin.Forms;
-
-using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 
 namespace ManageBluetooth.Services
 {
@@ -26,37 +18,20 @@ namespace ManageBluetooth.Services
     {
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
-
-        private readonly BluetoothManager _manager;
-
-        private readonly int ScanTimeout = 15000;
-
-        private List<IDevice> DiscoveredDeviceList { get; set; }
-        private List<IDevice> ConnectedDevicesList { get; set; }
+        private readonly IAndroidBluetoothService _androidBluetoothService;
 
         public BluetoothService()
         {
             this._bluetooth = CrossBluetoothLE.Current;
             this._adapter = CrossBluetoothLE.Current.Adapter;
-
-            this._manager = (BluetoothManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.BluetoothService);
-
-            this.DiscoveredDeviceList = new List<IDevice>();
-            this.ConnectedDevicesList = new List<IDevice>();
+            this._androidBluetoothService = DependencyService.Get<IAndroidBluetoothService>();
 
             this._bluetooth.StateChanged += BluetootStateChanged;
-            this._adapter.DeviceDiscovered += BluetoothDeviceDiscovered;
-            this._adapter.ScanTimeoutElapsed += BluetoothScanTimeoutElapsed;
-
-            this._adapter.ScanTimeout = this.ScanTimeout;
-            this._adapter.ScanMode = ScanMode.LowLatency;
         }
 
         ~BluetoothService()
         {
             this._bluetooth.StateChanged -= BluetootStateChanged;
-            this._adapter.DeviceDiscovered -= BluetoothDeviceDiscovered;
-            this._adapter.ScanTimeoutElapsed -= BluetoothScanTimeoutElapsed;
         }
 
         public bool IsBluetoothEnabled()
@@ -64,63 +39,32 @@ namespace ManageBluetooth.Services
             return this._bluetooth.IsOn;
         }
 
-        public async void ChangeBluetoothState()
+        public void ChangeBluetoothState()
         {
             if (IsBluetoothEnabled())
             {
-                await this._adapter.StopScanningForDevicesAsync();
-                this._manager.Adapter.Disable();
-
-                this.DiscoveredDeviceList.Clear();
-                this.ConnectedDevicesList.Clear();
+                this._androidBluetoothService.StopBluetoothScanning();
+                this._androidBluetoothService.DisableBluetooth();
             }
             else
             {
-                this._manager.Adapter.Enable();
+                this._androidBluetoothService.EnableBluetooth();
             }
         }
 
-        public IEnumerable<SimpleBluetoothDevice> GetConnectedOrKnowBluetoothDevices()
+        public IEnumerable<SimpleBluetoothDevice> GetBondedBluetoothDevices()
         {
-            var devices = new List<SimpleBluetoothDevice>();
-            var connectedOrPairedDevices = this._adapter.GetSystemConnectedOrPairedDevices();
-
-            foreach (var device in connectedOrPairedDevices)
-            {
-                this.ConnectedDevicesList.Add(device);
-                devices.Add(IDeviceConverter.ConvertToSimpleBluetoothDevice(device));
-            }
-
-            return devices;
+            return this._androidBluetoothService.GetBondedDevices();
         }
 
-        public async void StartScanningForBluetoothDevices()
+        public void StartScanningForBluetoothDevices()
         {
-            await this._adapter.StartScanningForDevicesAsync();
+            this._androidBluetoothService.StartBluetoothScanning();
         }
 
-        public async void StopScanningForBluetoothDevices()
+        public void StopScanningForBluetoothDevices()
         {
-            await this._adapter.StopScanningForDevicesAsync();
-        }
-
-        private async void BluetoothScanTimeoutElapsed(object sender, System.EventArgs e)
-        {
-            await this._adapter.StopScanningForDevicesAsync();
-
-            MessagingCenter.Send(this, BluetoothCommandConstants.BluetoothScanTimeoutElapsed, false);
-        }
-
-        private void BluetoothDeviceDiscovered(object sender, DeviceEventArgs e)
-        {
-            if (!this.DiscoveredDeviceList.Contains(e.Device)
-                && !string.IsNullOrEmpty(e.Device.Name))
-            {
-                this.DiscoveredDeviceList.Add(e.Device);
-                var bluetoothDevice = IDeviceConverter.ConvertToSimpleBluetoothDevice(e.Device);
-
-                MessagingCenter.Send(this, BluetoothCommandConstants.BluetootDeviceDiscovered, bluetoothDevice);
-            }
+            this._androidBluetoothService.StopBluetoothScanning();
         }
 
         private void BluetootStateChanged(object sender, BluetoothStateChangedArgs e)
@@ -140,37 +84,12 @@ namespace ManageBluetooth.Services
 
         public bool IsBluetoothScanning()
         {
-            return this._adapter.IsScanning;
+            return this._androidBluetoothService.BluetoothScanningStatus();
         }
 
         public async Task ConnectWithUnknownDevice(Guid deviceGuid)
         {
-            var device = this.DiscoveredDeviceList.FirstOrDefault(x => x.Id == deviceGuid);
 
-            if (device == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (this.IsBluetoothScanning())
-                {
-                    this.StopScanningForBluetoothDevices();
-                }
-                var para = new ConnectParameters(true, false);
-
-                await device.UpdateRssiAsync();
-
-                await this._adapter.ConnectToDeviceAsync(device, para);
-                var bluetoothDevice = IDeviceConverter.ConvertToSimpleBluetoothDevice(device);
-
-                var qwe = "qwe;";
-            }
-            catch (DeviceConnectionException ex)
-            {
-                // Popup z bledem
-            }
         }
     }
 }
