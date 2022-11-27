@@ -14,5 +14,6 @@ namespace ManageBluetooth.Interface
         void StopBluetoothScanning();
         bool BluetoothScanningStatus();
         Task<bool> ConnectWithDevice(string id);
+        void DisconnectWithDevice();
     }
 }

@@ -7,7 +7,7 @@ using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
 
-using ManageBluetooth.Droid.Receiver;
+using ManageBluetooth.Droid.Receivers;
 
 using Xamarin.CommunityToolkit.Helpers;
 

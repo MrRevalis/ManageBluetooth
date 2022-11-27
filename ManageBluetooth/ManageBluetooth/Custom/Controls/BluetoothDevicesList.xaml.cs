@@ -3,7 +3,9 @@ using System.Linq;
 using System.Windows.Input;
 
 using ManageBluetooth.Models;
+using ManageBluetooth.Resources;
 
+using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -54,9 +56,17 @@ namespace ManageBluetooth.Custom.Controls
             set => SetValue(ConnectWithDeviceCommandProperty, value);
         }
 
+        public LocalizedString Connecting { get; set; }
+        public LocalizedString Connected { get; set; }
+        public LocalizedString Disconnecting { get; set; }
+
         public BluetoothDevicesList()
         {
             InitializeComponent();
+
+            this.Connecting = new(() => AppResources.Connecting);
+            this.Connected = new(() => AppResources.Connected);
+            this.Disconnecting = new(() => AppResources.Disconnecting);
         }
     }
 }

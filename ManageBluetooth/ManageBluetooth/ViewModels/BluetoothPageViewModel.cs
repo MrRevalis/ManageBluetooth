@@ -6,6 +6,7 @@ using ManageBluetooth.Extensions;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
+using ManageBluetooth.Models.Enum;
 using ManageBluetooth.Resources;
 using ManageBluetooth.Services;
 using ManageBluetooth.ViewModels.Base;
@@ -84,11 +85,12 @@ namespace ManageBluetooth.ViewModels
             get => startStopScan;
             set => SetProperty(ref startStopScan, value);
         }
-
         public ICommand ChangeBluetoothStatusCommand { get; set; }
         public ICommand PageAppearingCommand { get; set; }
         public ICommand StartStopScanningCommand { get; set; }
-        public ICommand ConnectWithUnknownDeviceCommand { get; set; }
+        public ICommand ConnectWithBluetoothDeviceCommand { get; set; }
+
+        private bool isConnectingWithDevice;
 
         public BluetoothPageViewModel(IBluetoothService bluetoothService)
         {
@@ -99,13 +101,36 @@ namespace ManageBluetooth.ViewModels
 
             this.ChangeBluetoothStatusCommand = new Command(ChangeBluetoothState);
             this.StartStopScanningCommand = new Command(StartStopScanning);
-            // ConnectWithUnknownDeviceCommand = new Command<SimpleBluetoothDevice>((device) => ConnectWithUnknownDevice(device));
+            this.ConnectWithBluetoothDeviceCommand = new Command<SimpleBluetoothDevice>((device) => ConnectWithBluetoothDevice(device));
             this.PageAppearingCommand = new Command(PageAppearing);
 
             this.IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
             this.SetUpMessaginCenter();
             this.UpdateBluetoothProperties();
             this.StartStopBluetoothScanning();
+        }
+
+        private void ConnectWithBluetoothDevice(SimpleBluetoothDevice device)
+        {
+            if (!this._bluetoothService.IsBluetoothEnabled()
+                || this.isConnectingWithDevice
+                || device == null)
+            {
+                return;
+            }
+
+            if (device.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
+            {
+                device.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnecting;
+                this._bluetoothService.DisconnectWithBluetoothDevice();
+            }
+            else
+            {
+                this.isConnectingWithDevice = true;
+                device.DeviceState = BluetoothDeviceConnectionStateEnum.Connecting;
+
+                this._bluetoothService.ConnectWithBluetoothDevice(device.DeviceId);
+            }
         }
 
         private void PageAppearing()
@@ -157,8 +182,7 @@ namespace ManageBluetooth.ViewModels
             }
             this._bluetoothService.StartScanningForBluetoothDevices();
 
-            this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices());
-            this.BondedDevicesList = new ObservableCollection<SimpleBluetoothDevice>(BondedDevicesList);
+            this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderBy(x => (int)x.DeviceState));
         }
 
         private void StopBluetoothScan()
@@ -180,7 +204,18 @@ namespace ManageBluetooth.ViewModels
             }
 
             this.AvailableDevicesList.Add(device);
-            this.AvailableDevicesList = new ObservableCollection<SimpleBluetoothDevice>(AvailableDevicesList);
+        }
+
+
+        private void UpdateBluetoothDeviceProperty(UpdateBluetoothConnectionStatusModel updateModel)
+        {
+            var device = this.BondedDevicesList.FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
+            if (device == null)
+            {
+                return;
+            }
+
+            device.DeviceState = updateModel.DeviceState;
         }
 
 
@@ -200,6 +235,20 @@ namespace ManageBluetooth.ViewModels
             MessagingCenter.Subscribe<Application, bool>(Application.Current, BluetoothCommandConstants.BluetoothScanningStateChanged, (sender, arg) =>
             {
                 this.IsBluetoothScanning = arg;
+            });
+
+            MessagingCenter.Subscribe<Application, UpdateBluetoothConnectionStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, (sender, arg) =>
+            {
+                if (arg.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
+                {
+                    this.isConnectingWithDevice = false;
+                }
+                else if (arg.DeviceState == BluetoothDeviceConnectionStateEnum.Connecting)
+                {
+                    this.isConnectingWithDevice = true;
+                }
+
+                this.UpdateBluetoothDeviceProperty(arg);
             });
         }
 

@@ -65,7 +65,7 @@ namespace ManageBluetooth.Resources {
         /// </summary>
         internal static string AvailableDevices {
             get {
-                return ResourceManager.GetString("AvailableDevicesList", resourceCulture);
+                return ResourceManager.GetString("AvailableDevices", resourceCulture);
             }
         }
         
@@ -88,6 +88,15 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connected.
+        /// </summary>
+        internal static string Connected {
+            get {
+                return ResourceManager.GetString("Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected devices.
         /// </summary>
         internal static string ConnectedDevices {
@@ -97,11 +106,29 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connecting....
+        /// </summary>
+        internal static string Connecting {
+            get {
+                return ResourceManager.GetString("Connecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disabled.
         /// </summary>
         internal static string Disabled {
             get {
                 return ResourceManager.GetString("Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnecting.
+        /// </summary>
+        internal static string Disconnecting {
+            get {
+                return ResourceManager.GetString("Disconnecting", resourceCulture);
             }
         }
         

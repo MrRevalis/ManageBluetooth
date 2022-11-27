@@ -26,6 +26,10 @@
             <x:String x:Key="ApplicationName">Bluetooth</x:String>
             <Color
                 x:Key="DarkBlue">#000256</Color>
+            <Color
+                x:Key="LightCyan">#9FD2FD</Color>
+            <Color
+                x:Key="DarkCyan">#028BFD</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

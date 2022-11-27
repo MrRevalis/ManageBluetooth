@@ -2,6 +2,8 @@
 using Android.Bluetooth;
 using Android.Content;
 
+using Java.Lang;
+
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Enum;
 
@@ -30,22 +32,30 @@ namespace ManageBluetooth.Droid.Converters
 
         private static BluetoothDeviceConnectionStateEnum GetDeviceConnectionState(BluetoothDevice device)
         {
-            var deviceState = _bluetoothManager.GetConnectionState(device, ProfileType.Gatt);
-
-            switch (deviceState)
+            if (isConnected(device))
             {
-                case ProfileState.Disconnected: return BluetoothDeviceConnectionStateEnum.Disconnected;
-                case ProfileState.Connecting: return BluetoothDeviceConnectionStateEnum.Connecting;
-                case ProfileState.Connected: return BluetoothDeviceConnectionStateEnum.Connected;
-                case ProfileState.Disconnecting: return BluetoothDeviceConnectionStateEnum.Disconnecting;
-                default:
-                    return BluetoothDeviceConnectionStateEnum.Disconnected;
+                return BluetoothDeviceConnectionStateEnum.Connected;
             }
+            return BluetoothDeviceConnectionStateEnum.Disconnected;
         }
 
         private static BluetoothDeviceTypeEnum GetDeviceType(DeviceClass deviceClass)
         {
             return BluetoothDeviceTypeEnum.Unknown;
+        }
+
+        public static bool isConnected(BluetoothDevice device)
+        {
+            try
+            {
+                var m = device.Class.GetMethod("isConnected", (Class[])null);
+                var connected = (bool)m.Invoke(device, (Object[])null);
+                return connected;
+            }
+            catch (Exception e)
+            {
+                throw new IllegalStateException(e);
+            }
         }
     }
 }

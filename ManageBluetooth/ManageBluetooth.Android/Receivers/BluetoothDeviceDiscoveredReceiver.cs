@@ -9,7 +9,7 @@ using ManageBluetooth.Models.Constants;
 
 using Xamarin.Forms;
 
-namespace ManageBluetooth.Droid.Receiver
+namespace ManageBluetooth.Droid.Receivers
 {
     [BroadcastReceiver]
     [IntentFilter(new[] { BluetoothDevice.ActionFound })]

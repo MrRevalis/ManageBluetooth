@@ -145,7 +145,7 @@
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
                                     Devices="{Binding BondedDevicesList}"
-                                    ConnectWithDeviceCommand="{Binding ConnectWithBondedDeviceCommand}"/>
+                                    ConnectWithDeviceCommand="{Binding ConnectWithBluetoothDeviceCommand}"/>
                                 <Label
                                     Text="{xct:Translate AvailableDevices}"
                                     Padding="10, 5"
@@ -153,7 +153,7 @@
                                     FontAttributes="Bold" />
                                 <control:BluetoothDevicesList
                                     Devices="{Binding AvailableDevicesList}"
-                                    ConnectWithDeviceCommand="{Binding ConnectWithUnknownDeviceCommand}"/>
+                                    ConnectWithDeviceCommand="{Binding ConnectWithBluetoothDeviceCommand}"/>
                             </StackLayout>
                         </cu:RoundedCustomFrame>
                     </StackLayout>

@@ -133,4 +133,16 @@
     <value>No devices</value>
     <comment>No devices</comment>
   </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Connecting...</value>
+    <comment>Connecting</comment>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Connected</value>
+    <comment>Connected</comment>
+  </data>
+  <data name="Disconnecting" xml:space="preserve">
+    <value>Disconnecting</value>
+    <comment>Disconnecting</comment>
+  </data>
 </root>

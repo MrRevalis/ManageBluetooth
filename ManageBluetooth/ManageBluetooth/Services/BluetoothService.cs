@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ManageBluetooth.Interface;
@@ -87,9 +86,15 @@ namespace ManageBluetooth.Services
             return this._androidBluetoothService.BluetoothScanningStatus();
         }
 
-        public async Task ConnectWithUnknownDevice(Guid deviceGuid)
+        public async Task ConnectWithBluetoothDevice(string macAddress)
         {
+            var result = await this._androidBluetoothService.ConnectWithDevice(macAddress);
+            // wywoalanie w petli, 3 proby polaczenia
+        }
 
+        public void DisconnectWithBluetoothDevice()
+        {
+            this._androidBluetoothService.DisconnectWithDevice();
         }
     }
 }

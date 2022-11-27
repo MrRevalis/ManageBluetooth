@@ -3,6 +3,7 @@
     x:Class="ManageBluetooth.Custom.Controls.BluetoothDevicesList"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:converter="clr-namespace:ManageBluetooth.Converters"
+    xmlns:enum="clr-namespace:ManageBluetooth.Models.Enum"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     BindableLayout.ItemsSource="{Binding Devices, Source={x:Reference this}}"
@@ -14,32 +15,35 @@
                 x:Key="BluetoothDeviceClassConverter" />
             <converter:SeparatorVisibilityConverter
                 x:Key="SeparatorVisibilityConverter" />
+            <converter:BluetoothDeviceConnectionStateToColorConverter
+                x:Key="BluetoothDeviceConnectionStateToColorConverter" />
         </ResourceDictionary>
     </StackLayout.Resources>
     <BindableLayout.ItemTemplate>
         <DataTemplate>
             <Grid
-                Padding="5"
                 HeightRequest="50"
+                Margin="10, 0, 10, 0"
                 xct:TouchEffect.Command="{Binding ConnectWithDeviceCommand, Source={x:Reference this}}"
                 xct:TouchEffect.CommandParameter="{Binding .}"
                 xct:TouchEffect.NativeAnimation="True"
-                xct:TouchEffect.NativeAnimationColor="LightGray">
+                xct:TouchEffect.NativeAnimationColor="LightGray"
+                ColumnSpacing="0"
+                RowSpacing="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
+                    <RowDefinition 
+                        Height="*"/>
                     <RowDefinition
                         Height="1" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
-                        Width="1*" />
+                        Width="Auto" />
                     <ColumnDefinition
-                        Width="7*" />
+                        Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image
-                    VerticalOptions="Center"
-                    HorizontalOptions="Start"
-                    Margin="20, 0, 0, 0"
+                    Margin="0, 0, 10, 0"
                     Grid.Column="0"
                     Grid.Row="0">
                     <Image.Source>
@@ -49,19 +53,77 @@
                             Glyph="{Binding DeviceClass, Converter={x:StaticResource BluetoothDeviceClassConverter}}" />
                     </Image.Source>
                 </Image>
-                <Label
-                    Text="{Binding DeviceName}"
-                    TextColor="Black"
-                    FontSize="Body"
-                    VerticalTextAlignment="Center"
+                <Grid
+                    VerticalOptions="Center"
                     Grid.Column="1"
-                    Grid.Row="0" />
+                    Grid.Row="0"
+                    ColumnSpacing="0"
+                    RowSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label
+                        Text="{Binding DeviceName}"
+                        TextColor="{Binding DeviceState, Converter={x:StaticResource BluetoothDeviceConnectionStateToColorConverter}}"
+                        FontSize="Body"
+                        Grid.Row="0"/>
+                    <Label
+                        TextColor="Gray"
+                        FontSize="Caption"
+                        IsVisible="False"
+                        Grid.Row="1">
+                        <Label.Triggers>
+                            <DataTrigger
+                                TargetType="Label"
+                                Binding="{Binding DeviceState}"
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Connected}">
+                                <Setter
+                                    Property="Text"
+                                    Value="{Binding Connected.Localized, Source={x:Reference this} }" />
+                                <Setter
+                                    Property="IsVisible"
+                                    Value="True" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="Label"
+                                Binding="{Binding DeviceState}"
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Connecting}">
+                                <Setter
+                                    Property="Text"
+                                    Value="{Binding Connecting.Localized, Source={x:Reference this} }" />
+                                <Setter
+                                    Property="IsVisible"
+                                    Value="True" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="Label"
+                                Binding="{Binding DeviceState}"
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Disconnecting}">
+                                <Setter
+                                    Property="Text"
+                                    Value="{Binding Disconnecting.Localized, Source={x:Reference this} }" />
+                                <Setter
+                                    Property="IsVisible"
+                                    Value="True" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="Label"
+                                Binding="{Binding DeviceState}"
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Disconnected}">
+                                <Setter
+                                    Property="IsVisible"
+                                    Value="False" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </Grid>
                 <BoxView
                     IsVisible="{Binding Path=., Converter={x:StaticResource SeparatorVisibilityConverter}, ConverterParameter={x:Reference Name=this}}"
                     HeightRequest="1"
                     Color="#DDDDDD"
                     Grid.Row="1"
-                    Grid.Column="1" />
+                    Grid.Column="1"/>
             </Grid>
         </DataTemplate>
     </BindableLayout.ItemTemplate>

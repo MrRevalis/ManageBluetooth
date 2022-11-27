@@ -66,9 +66,9 @@
   <ItemGroup>
     <Compile Include="Converters\BluetoothDeviceConverter.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Receiver\BluetoothDeviceConnectionStateReceiver.cs" />
-    <Compile Include="Receiver\BluetoothDeviceDiscoveredReceiver.cs" />
-    <Compile Include="Receiver\BluetoothDiscoveryActionReceiver.cs" />
+    <Compile Include="Receivers\BluetoothDeviceConnectionStateReceiver.cs" />
+    <Compile Include="Receivers\BluetoothDeviceDiscoveredReceiver.cs" />
+    <Compile Include="Receivers\BluetoothDiscoveryActionReceiver.cs" />
     <Compile Include="Renderers\CustomFrameRenderer.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ManageBluetooth.Models;
@@ -14,6 +13,7 @@ namespace ManageBluetooth.Interface
         void StartScanningForBluetoothDevices();
         void StopScanningForBluetoothDevices();
         bool IsBluetoothScanning();
-        Task ConnectWithUnknownDevice(Guid deviceGuid);
+        Task ConnectWithBluetoothDevice(string macAddress);
+        void DisconnectWithBluetoothDevice();
     }
 }

@@ -144,4 +144,13 @@
   <data name="NoDevices" xml:space="preserve">
     <value>Brak urządzeń</value>
   </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Łączenie...</value>
+  </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Podłączono</value>
+  </data>
+  <data name="Disconnecting" xml:space="preserve">
+    <value>Rozłączanie</value>
+  </data>
 </root>

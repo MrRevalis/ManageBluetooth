@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Android.Bluetooth;
@@ -100,25 +101,60 @@ namespace ManageBluetooth.Droid.Services
 
             if (device.BondState == Bond.Bonded)
             {
-                var deviceUuid = device.GetUuids().FirstOrDefault() ?? new Android.OS.ParcelUuid(UUID.FromString(_defaultUuidForSpp));
-
-                _socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(deviceUuid.ToString()));
-                await _socket.ConnectAsync();
+                await this.ConnectWithDeviceAsync(device);
             }
             else if (device.BondState == Bond.None)
             {
                 // Dla testu, chyba trzeba najpierw polaczyć
-                //device.SetPairingConfirmation(true);
-                //device.SetPin(System.Text.Encoding.Default.GetBytes("1234"));
-                //device.CreateBond();
+                device.SetPairingConfirmation(true);
+                device.SetPin(System.Text.Encoding.Default.GetBytes("1234"));
+                device.CreateBond();
 
-                var deviceUuid = device.GetUuids().FirstOrDefault() ?? new Android.OS.ParcelUuid(UUID.FromString(_defaultUuidForSpp));
-
-                _socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(deviceUuid.ToString()));
-                await _socket.ConnectAsync();
+                await this.ConnectWithDeviceAsync(device);
             }
 
             return _socket != null;
+        }
+
+
+        public void DisconnectWithDevice()
+        {
+            if (this._socket != null
+                && this._socket.IsConnected)
+            {
+                this._socket.InputStream.Close();
+                this._socket.OutputStream.Close();
+                Thread.Sleep(1000);
+                this._socket.Close();
+
+                this._socket = null;
+            }
+        }
+
+        private async Task ConnectWithDeviceAsync(BluetoothDevice device)
+        {
+            if (device.FetchUuidsWithSdp())
+            {
+                var uuids = device.GetUuids();
+
+                if (uuids != null
+                    && uuids.Any())
+                {
+                    foreach (var uuid in uuids)
+                    {
+                        try
+                        {
+                            this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
+                            await _socket.ConnectAsync();
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            // this._socket.Close();
+                        }
+                    }
+                }
+            }
         }
     }
 }
