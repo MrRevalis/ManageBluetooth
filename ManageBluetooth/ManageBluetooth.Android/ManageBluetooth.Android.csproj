@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Converters\BluetoothDeviceConverter.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Receivers\BluetoothDeviceBondedStateReceiver.cs" />
     <Compile Include="Receivers\BluetoothDeviceConnectionStateReceiver.cs" />
     <Compile Include="Receivers\BluetoothDeviceDiscoveredReceiver.cs" />
     <Compile Include="Receivers\BluetoothDiscoveryActionReceiver.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AndroidBluetoothService.cs" />
+    <Compile Include="Services\AndroidToastService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -13,7 +13,7 @@ namespace ManageBluetooth.Interface
         void StartScanningForBluetoothDevices();
         void StopScanningForBluetoothDevices();
         bool IsBluetoothScanning();
-        Task ConnectWithBluetoothDevice(string macAddress);
+        Task ConnectWithBluetoothDevice(SimpleBluetoothDevice device);
         void DisconnectWithBluetoothDevice();
     }
 }

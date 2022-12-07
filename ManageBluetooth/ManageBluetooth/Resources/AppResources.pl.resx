@@ -153,4 +153,7 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Rozłączanie</value>
   </data>
+  <data name="LinkingError" xml:space="preserve">
+    <value>Błąd łączenia</value>
+  </data>
 </root>

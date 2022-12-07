@@ -18,12 +18,14 @@ namespace ManageBluetooth.Services
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
         private readonly IAndroidBluetoothService _androidBluetoothService;
+        private readonly IToastService _toastService;
 
         public BluetoothService()
         {
             this._bluetooth = CrossBluetoothLE.Current;
             this._adapter = CrossBluetoothLE.Current.Adapter;
             this._androidBluetoothService = DependencyService.Get<IAndroidBluetoothService>();
+            this._toastService = DependencyService.Get<IToastService>();
 
             this._bluetooth.StateChanged += BluetootStateChanged;
         }
@@ -86,10 +88,20 @@ namespace ManageBluetooth.Services
             return this._androidBluetoothService.BluetoothScanningStatus();
         }
 
-        public async Task ConnectWithBluetoothDevice(string macAddress)
+        public async Task ConnectWithBluetoothDevice(SimpleBluetoothDevice device)
         {
-            var result = await this._androidBluetoothService.ConnectWithDevice(macAddress);
-            // wywoalanie w petli, 3 proby polaczenia
+            if (device.IsBonded)
+            {
+                await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
+            }
+            else
+            {
+                this._androidBluetoothService.BondWithDevice(device.DeviceId);
+            }
+            //if (!result)
+            //{
+            //    device.DeviceState = Models.Enum.BluetoothDeviceConnectionStateEnum.Error;
+            //}
         }
 
         public void DisconnectWithBluetoothDevice()

@@ -7,7 +7,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     BindableLayout.ItemsSource="{Binding Devices, Source={x:Reference this}}"
-    BindableLayout.EmptyView="{xct:Translate NoDevices}"
     x:Name="this">
     <StackLayout.Resources>
         <ResourceDictionary>
@@ -19,6 +18,17 @@
                 x:Key="BluetoothDeviceConnectionStateToColorConverter" />
         </ResourceDictionary>
     </StackLayout.Resources>
+
+    <BindableLayout.EmptyView>
+        <StackLayout>
+            <Label
+                Text="{xct:Translate NoDevices}"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Margin="0, 10, 0, 10"/>
+        </StackLayout>
+    </BindableLayout.EmptyView>
+
     <BindableLayout.ItemTemplate>
         <DataTemplate>
             <Grid
@@ -77,13 +87,10 @@
                             <DataTrigger
                                 TargetType="Label"
                                 Binding="{Binding DeviceState}"
-                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Connected}">
-                                <Setter
-                                    Property="Text"
-                                    Value="{Binding Connected.Localized, Source={x:Reference this} }" />
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Disconnected}">
                                 <Setter
                                     Property="IsVisible"
-                                    Value="True" />
+                                    Value="False" />
                             </DataTrigger>
                             <DataTrigger
                                 TargetType="Label"
@@ -110,10 +117,24 @@
                             <DataTrigger
                                 TargetType="Label"
                                 Binding="{Binding DeviceState}"
-                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Disconnected}">
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Connected}">
+                                <Setter
+                                    Property="Text"
+                                    Value="{Binding Connected.Localized, Source={x:Reference this} }" />
                                 <Setter
                                     Property="IsVisible"
-                                    Value="False" />
+                                    Value="True" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="Label"
+                                Binding="{Binding DeviceState}"
+                                Value="{x:Static enum:BluetoothDeviceConnectionStateEnum.Error}">
+                                <Setter
+                                    Property="Text"
+                                    Value="{Binding LinkingError.Localized, Source={x:Reference this} }" />
+                                <Setter
+                                    Property="IsVisible"
+                                    Value="True" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>

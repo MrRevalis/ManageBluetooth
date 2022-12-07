@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,12 +8,14 @@ using System.Threading.Tasks;
 using Android.Bluetooth;
 using Android.Content;
 
+
 using Java.Util;
 
 using ManageBluetooth.Droid.Converters;
 using ManageBluetooth.Droid.Services;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
+using ManageBluetooth.Models.Constants;
 
 using Xamarin.Forms;
 
@@ -26,6 +29,8 @@ namespace ManageBluetooth.Droid.Services
 
         private const string _defaultUuidForSpp = "00001101-0000-1000-8000-00805f9b34fb";
         private BluetoothSocket _socket;
+        private Stream deviceInputStream;
+        private Stream deviceOutputStream;
 
         public AndroidBluetoothService()
         {
@@ -99,21 +104,27 @@ namespace ManageBluetooth.Droid.Services
                 this.StopBluetoothScanning();
             }
 
-            if (device.BondState == Bond.Bonded)
-            {
-                await this.ConnectWithDeviceAsync(device);
-            }
-            else if (device.BondState == Bond.None)
-            {
-                // Dla testu, chyba trzeba najpierw polaczyć
-                device.SetPairingConfirmation(true);
-                device.SetPin(System.Text.Encoding.Default.GetBytes("1234"));
-                device.CreateBond();
-
-                await this.ConnectWithDeviceAsync(device);
-            }
+            await this.ConnectWithDevice(device);
 
             return _socket != null;
+        }
+
+
+        public void BondWithDevice(string id)
+        {
+            var device = this._bluetoothAdapter.GetRemoteDevice(id);
+
+            if (device == null)
+            {
+                throw new Exception("Brak urzadzenia");
+            }
+
+            if (this.BluetoothScanningStatus())
+            {
+                this.StopBluetoothScanning();
+            }
+
+            device.CreateBond();
         }
 
 
@@ -122,16 +133,23 @@ namespace ManageBluetooth.Droid.Services
             if (this._socket != null
                 && this._socket.IsConnected)
             {
-                this._socket.InputStream.Close();
-                this._socket.OutputStream.Close();
-                Thread.Sleep(1000);
-                this._socket.Close();
+                try
+                {
+                    this.deviceInputStream.Close();
+                    this.deviceOutputStream.Close();
+                    Thread.Sleep(1000);
+                    this._socket.Close();
 
-                this._socket = null;
+                    this._socket = null;
+                }
+                catch (Exception e)
+                {
+
+                }
             }
         }
 
-        private async Task ConnectWithDeviceAsync(BluetoothDevice device)
+        private async Task<bool> ConnectWithDevice(BluetoothDevice device)
         {
             if (device.FetchUuidsWithSdp())
             {
@@ -144,17 +162,30 @@ namespace ManageBluetooth.Droid.Services
                     {
                         try
                         {
-                            this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
+                            this._socket = device.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
                             await _socket.ConnectAsync();
-                            break;
+                            this.deviceInputStream = this._socket.InputStream;
+                            this.deviceOutputStream = this._socket.OutputStream;
+
+                            return true;
                         }
                         catch (Exception e)
                         {
-                            // this._socket.Close();
+                            this._socket.Close();
                         }
+
+                        var statusModel = new UpdateBluetoothConnectionStatusModel
+                        {
+                            DeviceId = device.Address,
+                            DeviceState = Models.Enum.BluetoothDeviceConnectionStateEnum.Error
+                        };
+
+                        MessagingCenter.Send(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, statusModel);
                     }
                 }
             }
+
+            return false;
         }
     }
 }

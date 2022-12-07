@@ -47,11 +47,11 @@ namespace ManageBluetooth.Models
             get => deviceState;
             set
             {
+                if (deviceState == value) return;
                 deviceState = value;
                 OnPropertyChanged();
             }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

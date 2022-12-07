@@ -142,6 +142,15 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Linking error.
+        /// </summary>
+        internal static string LinkingError {
+            get {
+                return ResourceManager.GetString("LinkingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No devices.
         /// </summary>
         internal static string NoDevices {

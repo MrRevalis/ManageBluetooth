@@ -145,4 +145,8 @@
     <value>Disconnecting</value>
     <comment>Disconnecting</comment>
   </data>
+  <data name="LinkingError" xml:space="preserve">
+    <value>Linking error</value>
+    <comment>Linking error</comment>
+  </data>
 </root>

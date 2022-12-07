@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
+using ManageBluetooth.Extensions;
 using ManageBluetooth.Models;
 using ManageBluetooth.Resources;
 
@@ -19,22 +19,16 @@ namespace ManageBluetooth.Custom.Controls
                 nameof(Devices),
                 typeof(ObservableCollection<SimpleBluetoothDevice>),
                 typeof(BluetoothDevicesList),
-                default(ObservableCollection<SimpleBluetoothDevice>),
                 propertyChanged: DevicesListChanged);
 
         private static void DevicesListChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var newList = newValue as ObservableCollection<SimpleBluetoothDevice>;
-            var control = bindable as StackLayout;
+            var control = bindable as BluetoothDevicesList;
 
-            if (!newList.Any())
-            {
-                control.Margin = new Thickness(0, 10, 0, 10);
-            }
-            else
-            {
-                control.Margin = new Thickness(0, 0, 0, 0);
-            }
+            var devices = (newValue as ObservableCollection<SimpleBluetoothDevice>);
+            devices.SortByDescending(x => x.DeviceState);
+
+            BindableLayout.SetItemsSource(control.@this, devices);
         }
 
         public ObservableCollection<SimpleBluetoothDevice> Devices
@@ -47,8 +41,7 @@ namespace ManageBluetooth.Custom.Controls
             BindableProperty.Create(
                 nameof(ConnectWithDeviceCommand),
                 typeof(ICommand),
-                typeof(BluetoothDevicesList),
-                default(ICommand));
+                typeof(BluetoothDevicesList));
 
         public ICommand ConnectWithDeviceCommand
         {
@@ -59,7 +52,7 @@ namespace ManageBluetooth.Custom.Controls
         public LocalizedString Connecting { get; set; }
         public LocalizedString Connected { get; set; }
         public LocalizedString Disconnecting { get; set; }
-
+        public LocalizedString LinkingError { get; set; }
         public BluetoothDevicesList()
         {
             InitializeComponent();
@@ -67,6 +60,7 @@ namespace ManageBluetooth.Custom.Controls
             this.Connecting = new(() => AppResources.Connecting);
             this.Connected = new(() => AppResources.Connected);
             this.Disconnecting = new(() => AppResources.Disconnecting);
+            this.LinkingError = new(() => AppResources.LinkingError);
         }
     }
 }
