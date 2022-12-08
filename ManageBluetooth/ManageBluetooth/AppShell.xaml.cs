@@ -11,6 +11,7 @@ namespace ManageBluetooth
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(BluetoothPage), typeof(BluetoothPage));
+            Routing.RegisterRoute($"{nameof(BluetoothPage)}/{nameof(BluetoothDevicePage)}", typeof(BluetoothDevicePage));
         }
     }
 }

@@ -51,6 +51,8 @@
                         Width="Auto" />
                     <ColumnDefinition
                         Width="*" />
+                    <ColumnDefinition
+                        Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Image
                     Margin="0, 0, 10, 0"
@@ -139,12 +141,19 @@
                         </Label.Triggers>
                     </Label>
                 </Grid>
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    xct:TouchEffect.Command="{Binding BluetoothDeviceSettingsCommand, Source={x:Reference this}}"
+                    xct:TouchEffect.CommandParameter="{Binding .}"
+                    Text="PAge" />
                 <BoxView
                     IsVisible="{Binding Path=., Converter={x:StaticResource SeparatorVisibilityConverter}, ConverterParameter={x:Reference Name=this}}"
                     HeightRequest="1"
                     Color="#DDDDDD"
                     Grid.Row="1"
-                    Grid.Column="1"/>
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2" />
             </Grid>
         </DataTemplate>
     </BindableLayout.ItemTemplate>

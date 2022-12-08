@@ -16,7 +16,7 @@
             Command="{Binding PageAppearingCommand}" />
     </ContentPage.Behaviors>
 
-    <NavigationPage.TitleView>
+    <Shell.TitleView>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -24,18 +24,20 @@
             </Grid.ColumnDefinitions>
             <Label
                 Text="{StaticResource ApplicationName}"
-                FontSize="Body"
+                FontSize="19"
                 FontAttributes="Bold"
+                VerticalOptions="CenterAndExpand"
                 Grid.Column="0" />
             <Label
                 Text="{Binding StartStopScan.Localized}"
                 IsVisible="{Binding IsBluetoothEnabled}"
                 xct:TouchEffect.Command="{Binding StartStopScanningCommand}"
                 HorizontalOptions="End"
+                VerticalOptions="CenterAndExpand"
                 Padding="10, 0"
                 Grid.Column="1" />
         </Grid>
-    </NavigationPage.TitleView>
+    </Shell.TitleView>
 
     <ContentPage.Content>
         <Grid>

@@ -5,6 +5,11 @@
     xmlns:views="clr-namespace:ManageBluetooth.Views"
     xmlns:constants="clr-namespace:ManageBluetooth.Models.Constants"
     Title="ManageBluetooth"
+    FlyoutBehavior="Disabled"
     x:Class="ManageBluetooth.AppShell">
-
+    <ShellItem
+        Route="BluetoothPage">
+        <ShellContent
+            ContentTemplate="{DataTemplate views:BluetoothPage}" />
+    </ShellItem>
 </Shell>

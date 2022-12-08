@@ -4,6 +4,7 @@ using System.Windows.Input;
 using ManageBluetooth.Extensions;
 using ManageBluetooth.Models;
 using ManageBluetooth.Resources;
+using ManageBluetooth.Views;
 
 using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.Forms;
@@ -53,6 +54,8 @@ namespace ManageBluetooth.Custom.Controls
         public LocalizedString Connected { get; set; }
         public LocalizedString Disconnecting { get; set; }
         public LocalizedString LinkingError { get; set; }
+
+        public ICommand BluetoothDeviceSettingsCommand { get; set; }
         public BluetoothDevicesList()
         {
             InitializeComponent();
@@ -61,6 +64,19 @@ namespace ManageBluetooth.Custom.Controls
             this.Connected = new(() => AppResources.Connected);
             this.Disconnecting = new(() => AppResources.Disconnecting);
             this.LinkingError = new(() => AppResources.LinkingError);
+
+            this.BluetoothDeviceSettingsCommand = new Command<SimpleBluetoothDevice>(BluetoothDeviceSettings);
+        }
+
+        private async void BluetoothDeviceSettings(SimpleBluetoothDevice device)
+        {
+            if (device == null
+                || !device.IsBonded)
+            {
+                return;
+            }
+
+            await Shell.Current.GoToAsync($"//{nameof(BluetoothPage)}/{nameof(BluetoothDevicePage)}");
         }
     }
 }
