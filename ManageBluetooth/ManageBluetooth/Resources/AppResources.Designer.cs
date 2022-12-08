@@ -88,11 +88,38 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel bond.
+        /// </summary>
+        internal static string CancelBond {
+            get {
+                return ResourceManager.GetString("CancelBond", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change name.
+        /// </summary>
+        internal static string ChangeName {
+            get {
+                return ResourceManager.GetString("ChangeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected.
         /// </summary>
         internal static string Connected {
             get {
                 return ResourceManager.GetString("Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected device.
+        /// </summary>
+        internal static string ConnectedDevice {
+            get {
+                return ResourceManager.GetString("ConnectedDevice", resourceCulture);
             }
         }
         

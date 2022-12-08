@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ManageBluetooth.ViewModels;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,6 +11,8 @@ namespace ManageBluetooth.Views
         public BluetoothDevicePage()
         {
             InitializeComponent();
+
+            BindingContext = Startup.ServiceProvider.GetService<BluetoothDevicePageViewModel>();
         }
     }
 }

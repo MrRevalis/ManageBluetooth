@@ -149,4 +149,16 @@
     <value>Linking error</value>
     <comment>Linking error</comment>
   </data>
+  <data name="ConnectedDevice" xml:space="preserve">
+    <value>Connected device</value>
+    <comment>Connected device</comment>
+  </data>
+  <data name="ChangeName" xml:space="preserve">
+    <value>Change name</value>
+    <comment>Change name</comment>
+  </data>
+  <data name="CancelBond" xml:space="preserve">
+    <value>Cancel bond</value>
+    <comment>Cancel bond</comment>
+  </data>
 </root>

@@ -76,7 +76,7 @@ namespace ManageBluetooth.Custom.Controls
                 return;
             }
 
-            await Shell.Current.GoToAsync($"//{nameof(BluetoothPage)}/{nameof(BluetoothDevicePage)}");
+            await Shell.Current.GoToAsync($"//{nameof(BluetoothPage)}/{nameof(BluetoothDevicePage)}?{nameof(SimpleBluetoothDevice.DeviceId)}={device.DeviceId}");
         }
     }
 }

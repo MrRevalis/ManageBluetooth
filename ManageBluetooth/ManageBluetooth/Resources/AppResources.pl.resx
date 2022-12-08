@@ -156,4 +156,13 @@
   <data name="LinkingError" xml:space="preserve">
     <value>Błąd łączenia</value>
   </data>
+  <data name="ConnectedDevice" xml:space="preserve">
+    <value>Połączone urządzenie</value>
+  </data>
+  <data name="ChangeName" xml:space="preserve">
+    <value>Zmień nazwę</value>
+  </data>
+  <data name="CancelBond" xml:space="preserve">
+    <value>Anuluj powiązanie</value>
+  </data>
 </root>

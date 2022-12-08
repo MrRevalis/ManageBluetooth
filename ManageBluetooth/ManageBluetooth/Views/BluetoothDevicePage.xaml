@@ -1,12 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ManageBluetooth.Views.BluetoothDevicePage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:cu="clr-namespace:ManageBluetooth.Custom"
+    xmlns:effects="clr-namespace:ManageBluetooth.Custom.Effects;assembly=ManageBluetooth"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    x:Class="ManageBluetooth.Views.BluetoothDevicePage">
+    <StackLayout>
+        <Frame
+            Margin="0, 10, 0, 0"
+            CornerRadius="10">
+            <Label
+                Text="{Binding ChangeName.Localized}" />
+        </Frame>
+    </StackLayout>
 </ContentPage>

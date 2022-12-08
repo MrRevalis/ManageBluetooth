@@ -18,6 +18,7 @@ namespace ManageBluetooth.Extensions
         public static IServiceCollection ConfigureViewModels(this IServiceCollection services)
         {
             services.AddTransient<BluetoothPageViewModel>();
+            services.AddTransient<BluetoothDevicePageViewModel>();
 
             return services;
         }

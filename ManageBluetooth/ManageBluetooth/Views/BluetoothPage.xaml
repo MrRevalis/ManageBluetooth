@@ -4,6 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:control="clr-namespace:ManageBluetooth.Custom.Controls"
     xmlns:cu="clr-namespace:ManageBluetooth.Custom"
+    xmlns:effects="clr-namespace:ManageBluetooth.Custom.Effects;assembly=ManageBluetooth"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
     <ContentPage.Resources>
@@ -134,9 +135,10 @@
                             Text="{Binding IsBluetoothEnabledMessage.Localized}"
                             FontSize="Body"
                             Padding="10" />
-                        <cu:RoundedCustomFrame
+                        <Frame
                             IsVisible="{Binding IsBluetoothEnabled}"
-                            CornerRadius="20, 20, 0, 0"
+                            IsClippedToBounds="True"
+                            effects:RoundCornersEffect.CornerRadius="20"
                             Padding="0"
                             BackgroundColor="White">
                             <StackLayout>
@@ -157,7 +159,7 @@
                                     Devices="{Binding AvailableDevicesList}"
                                     ConnectWithDeviceCommand="{Binding BondWithBluetoothDeviceCommand}"/>
                             </StackLayout>
-                        </cu:RoundedCustomFrame>
+                        </Frame>
                     </StackLayout>
                 </ScrollView>
             </ContentView>
