@@ -16,5 +16,6 @@ namespace ManageBluetooth.Interface
         Task<bool> ConnectWithDevice(string id);
         void DisconnectWithDevice();
         void BondWithDevice(string id);
+        SimpleBluetoothDevice GetBluetoothDevice(string id);
     }
 }

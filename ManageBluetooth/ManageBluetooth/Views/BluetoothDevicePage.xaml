@@ -5,13 +5,51 @@
     xmlns:effects="clr-namespace:ManageBluetooth.Custom.Effects;assembly=ManageBluetooth"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    x:Class="ManageBluetooth.Views.BluetoothDevicePage">
+    x:Class="ManageBluetooth.Views.BluetoothDevicePage"
+    Title="{Binding ConnectedDevice.Localized}">
     <StackLayout>
         <Frame
-            Margin="0, 10, 0, 0"
+            Padding="0"
+            Margin="5, 10, 5, 10"
             CornerRadius="10">
-            <Label
-                Text="{Binding ChangeName.Localized}" />
+            <Grid
+                RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition 
+                        Height="Auto"/>
+                    <RowDefinition 
+                        Height="1"/>
+                    <RowDefinition
+                        Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackLayout
+                    xct:TouchEffect.Command="{Binding ChangeDeviceAliasCommand}"
+                    xct:TouchEffect.NativeAnimation="True"
+                    xct:TouchEffect.NativeAnimationColor="LightGray"
+                    Padding="10, 10, 10, 5"
+                    Grid.Row="0">
+                    <Label
+                        Text="{Binding ChangeName.Localized}"
+                        FontSize="19"
+                        TextColor="Black"/>
+                    <Label
+                        Text="{Binding Device.DeviceName}"
+                        TextColor="{StaticResource DarkCyan}"/>
+                </StackLayout>
+                <BoxView
+                    Margin="0"
+                    Color="#DDDDDD"
+                    Grid.Row="1" />
+                <Label
+                    Text="{Binding CancelBond.Localized}"
+                    FontSize="19"
+                    TextColor="Black"
+                    Padding="10, 10, 10, 10"
+                    xct:TouchEffect.Command="{Binding CancelBondWithDeviceCommand}"
+                    xct:TouchEffect.NativeAnimation="True"
+                    xct:TouchEffect.NativeAnimationColor="LightGray"
+                    Grid.Row="2" />
+            </Grid>
         </Frame>
     </StackLayout>
 </ContentPage>

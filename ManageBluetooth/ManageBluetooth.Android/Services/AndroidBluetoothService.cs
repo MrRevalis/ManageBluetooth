@@ -187,5 +187,17 @@ namespace ManageBluetooth.Droid.Services
 
             return false;
         }
+
+        public SimpleBluetoothDevice GetBluetoothDevice(string id)
+        {
+            var device = this._bluetoothAdapter.GetRemoteDevice(id);
+
+            if (device == null)
+            {
+                return null;
+            }
+
+            return BluetoothDeviceConverter.ConvertToSimpleBluetoothDevice(device);
+        }
     }
 }

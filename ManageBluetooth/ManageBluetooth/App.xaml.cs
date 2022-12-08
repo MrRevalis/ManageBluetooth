@@ -16,7 +16,6 @@ namespace ManageBluetooth
             LocalizationResourceManager.Current.Init(AppResources.ResourceManager);
             LocalizationResourceManager.Current.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => AppResources.Culture = LocalizationResourceManager.Current.CurrentCulture; ;
 
-            //MainPage = new NavigationPage(new BluetoothPage());
             MainPage = new AppShell();
         }
 

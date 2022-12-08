@@ -108,5 +108,15 @@ namespace ManageBluetooth.Services
         {
             this._androidBluetoothService.DisconnectWithDevice();
         }
+
+        public SimpleBluetoothDevice GetBluetoothDevice(string id)
+        {
+            if (!IsBluetoothEnabled())
+            {
+                return null;
+            }
+
+            return this._androidBluetoothService.GetBluetoothDevice(id);
+        }
     }
 }

@@ -12,25 +12,23 @@
                     Property="BackgroundColor"
                     Value="#F6F6F6" />
             </Style>
+
             <Style
                 TargetType="Shell"
                 ApplyToDerivedTypes="True">
                 <Setter
+                    Property="ForegroundColor"
+                    Value="Gray" />
+                <Setter
+                    Property="TitleColor"
+                    Value="Gray" />
+                <Setter
                     Property="BackgroundColor"
                     Value="#F6F6F6" />
             </Style>
-            <Style
-                TargetType="NavigationPage"
-                ApplyToDerivedTypes="True">
-                <Setter
-                    Property="BarBackgroundColor"
-                    Value="#F6F6F6" />
-                <Setter
-                    Property="BarTextColor"
-                    Value="Black" />
-            </Style>
 
             <x:String x:Key="ApplicationName">Bluetooth</x:String>
+            
             <Color
                 x:Key="DarkBlue">#000256</Color>
             <Color

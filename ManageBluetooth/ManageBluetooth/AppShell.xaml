@@ -7,6 +7,7 @@
     Title="ManageBluetooth"
     FlyoutBehavior="Disabled"
     x:Class="ManageBluetooth.AppShell">
+
     <ShellItem
         Route="BluetoothPage">
         <ShellContent
