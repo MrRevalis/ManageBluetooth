@@ -118,5 +118,15 @@ namespace ManageBluetooth.Services
 
             return this._androidBluetoothService.GetBluetoothDevice(id);
         }
+
+        public void ChangeBluetoothDeviceAlias(string id, string newAlias)
+        {
+            this._androidBluetoothService.ChangeBluetoothDeviceAlias(id, newAlias);
+        }
+
+        public void UnbondWithBluetoothDevice(string id)
+        {
+            this._androidBluetoothService.UnbondWithBluetoothDevice(id);
+        }
     }
 }

@@ -71,7 +71,8 @@
     <Compile Include="Receivers\BluetoothDeviceConnectionStateReceiver.cs" />
     <Compile Include="Receivers\BluetoothDeviceDiscoveredReceiver.cs" />
     <Compile Include="Receivers\BluetoothDiscoveryActionReceiver.cs" />
-    <Compile Include="Renderers\CustomFrameRenderer.cs" />
+    <Compile Include="Renderers\EntryWithLineColorRenderer.cs" />
+    <Compile Include="Renderers\RoundedFrameRenderer.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AndroidBluetoothService.cs" />

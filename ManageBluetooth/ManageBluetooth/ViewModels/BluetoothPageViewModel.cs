@@ -142,7 +142,11 @@ namespace ManageBluetooth.ViewModels
 
         private void PageAppearing()
         {
-            // StartStopBluetoothScanning();
+            if (this.BondedDevicesList != null)
+            {
+                this.BondedDevicesList.Clear();
+                this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderBy(x => (int)x.DeviceState));
+            }
         }
 
         private void StartStopScanning()
@@ -189,6 +193,7 @@ namespace ManageBluetooth.ViewModels
             }
             this._bluetoothService.StartScanningForBluetoothDevices();
 
+            this.BondedDevicesList.Clear();
             this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderBy(x => (int)x.DeviceState));
         }
 

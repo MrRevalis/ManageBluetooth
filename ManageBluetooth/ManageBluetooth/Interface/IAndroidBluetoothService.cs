@@ -17,5 +17,7 @@ namespace ManageBluetooth.Interface
         void DisconnectWithDevice();
         void BondWithDevice(string id);
         SimpleBluetoothDevice GetBluetoothDevice(string id);
+        void ChangeBluetoothDeviceAlias(string id, string newAlias);
+        void UnbondWithBluetoothDevice(string id);
     }
 }

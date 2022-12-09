@@ -2,7 +2,7 @@
 
 namespace ManageBluetooth.Custom
 {
-    public class RoundedCustomFrame : Frame
+    public class RoundedFrame : Frame
     {
         public new CornerRadius CornerRadius
         {
@@ -11,9 +11,9 @@ namespace ManageBluetooth.Custom
         }
 
         public static new readonly BindableProperty CornerRadiusProperty =
-            BindableProperty.Create(nameof(CornerRadius), typeof(CornerRadius), typeof(RoundedCustomFrame));
+            BindableProperty.Create(nameof(CornerRadius), typeof(CornerRadius), typeof(RoundedFrame));
 
-        public RoundedCustomFrame()
+        public RoundedFrame()
         {
             base.CornerRadius = 0;
         }

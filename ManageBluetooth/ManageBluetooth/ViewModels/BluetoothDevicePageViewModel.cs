@@ -63,16 +63,22 @@ namespace ManageBluetooth.ViewModels
         {
             var changeAlias = new ChangeDeviceAliasPopup(this.Device.DeviceName);
 
-            var returnedValues = await NavigationExtensions.ShowPopupAsync(App.Current.MainPage.Navigation, changeAlias);
-            if (returnedValues != null)
+            var returnedAlias = await NavigationExtensions.ShowPopupAsync(App.Current.MainPage.Navigation, changeAlias);
+            if (returnedAlias != null)
             {
-                this.Device.DeviceName = returnedValues as string;
+                var alias = returnedAlias as string;
+                if (!string.IsNullOrEmpty(alias))
+                {
+                    this.Device.DeviceName = returnedAlias as string;
+                    this._bluetoothService.ChangeBluetoothDeviceAlias(this.Device.DeviceId, alias);
+                }
             }
         }
 
         private void CancelBondWithDevice()
         {
-
+            this._bluetoothService.UnbondWithBluetoothDevice(this.Device.DeviceId);
+            Shell.Current.GoToAsync("..");
         }
     }
 }

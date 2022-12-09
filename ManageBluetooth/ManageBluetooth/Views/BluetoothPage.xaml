@@ -48,7 +48,7 @@
                 <RowDefinition
                     Height="*" />
             </Grid.RowDefinitions>
-            <cu:RoundedCustomFrame
+            <cu:RoundedFrame
                 Grid.Row="0"
                 CornerRadius="0, 0, 20, 20">
                 <Grid>
@@ -103,12 +103,12 @@
                         Color="White"
                         IsRunning="{Binding IsBluetoothScanning}" />
                 </Grid>
-                <cu:RoundedCustomFrame.Style>
+                <cu:RoundedFrame.Style>
                     <Style
-                        TargetType="cu:RoundedCustomFrame">
+                        TargetType="cu:RoundedFrame">
                         <Style.Triggers>
                             <DataTrigger
-                                TargetType="cu:RoundedCustomFrame"
+                                TargetType="cu:RoundedFrame"
                                 Binding="{Binding IsBluetoothEnabled}"
                                 Value="True">
                                 <Setter
@@ -116,7 +116,7 @@
                                     Value="{StaticResource DarkBlue}" />
                             </DataTrigger>
                             <DataTrigger
-                                TargetType="cu:RoundedCustomFrame"
+                                TargetType="cu:RoundedFrame"
                                 Binding="{Binding IsBluetoothEnabled}"
                                 Value="False">
                                 <Setter
@@ -125,8 +125,8 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </cu:RoundedCustomFrame.Style>
-            </cu:RoundedCustomFrame>
+                </cu:RoundedFrame.Style>
+            </cu:RoundedFrame>
             <ContentView
                 Grid.Row="1">
                 <ScrollView>

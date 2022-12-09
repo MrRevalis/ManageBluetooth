@@ -9,12 +9,12 @@ using Xamarin.Forms.Platform.Android;
 
 using FrameRenderer = Xamarin.Forms.Platform.Android.AppCompat.FrameRenderer;
 
-[assembly: ExportRenderer(typeof(RoundedCustomFrame), typeof(CustomFrameRenderer))]
+[assembly: ExportRenderer(typeof(RoundedFrame), typeof(RoundedFrameRenderer))]
 namespace ManageBluetooth.Droid.Renderers
 {
-    public class CustomFrameRenderer : FrameRenderer
+    public class RoundedFrameRenderer : FrameRenderer
     {
-        public CustomFrameRenderer(Context context) : base(context) { }
+        public RoundedFrameRenderer(Context context) : base(context) { }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Frame> e)
         {
@@ -29,7 +29,7 @@ namespace ManageBluetooth.Droid.Renderers
 
         private void UpdateCornerRadius()
         {
-            RoundedCustomFrame roundedCustomFrame = this.Element as RoundedCustomFrame;
+            RoundedFrame roundedCustomFrame = this.Element as RoundedFrame;
             if (roundedCustomFrame != null)
             {
                 var cornerRadius = roundedCustomFrame.CornerRadius;

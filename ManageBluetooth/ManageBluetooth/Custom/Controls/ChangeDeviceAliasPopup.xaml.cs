@@ -52,7 +52,7 @@ namespace ManageBluetooth.Custom.Controls
                     }
                     break;
                 case GestureStatus.Completed:
-                    if (verticalPosition > 150)
+                    if (verticalPosition > 100)
                     {
                         RoundedFrame.TranslateTo(0, 200, 100);
                         Dismiss(null);
@@ -67,11 +67,12 @@ namespace ManageBluetooth.Custom.Controls
 
         public void ClosePopupEvent(object sender, EventArgs e)
         {
-            if (Boolean.TryParse((e as TappedEventArgs).Parameter.ToString(), out var shouldSave))
+            if (Boolean.TryParse((e as TappedEventArgs).Parameter?.ToString(), out var shouldSave))
             {
                 if (shouldSave)
                 {
                     Dismiss(this.DeviceName);
+                    return;
                 }
             }
 

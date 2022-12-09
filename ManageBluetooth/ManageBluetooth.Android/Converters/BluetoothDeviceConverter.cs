@@ -23,11 +23,20 @@ namespace ManageBluetooth.Droid.Converters
             return new SimpleBluetoothDevice
             {
                 DeviceId = device.Address,
-                DeviceName = string.IsNullOrEmpty(device.Name) ? device.Address : device.Name,
+                DeviceName = GetBluetoothDeviceName(device),
                 IsBonded = device.BondState == Bond.Bonded ? true : false,
                 DeviceClass = GetDeviceType(device.BluetoothClass.DeviceClass),
                 DeviceState = GetDeviceConnectionState(device)
             };
+        }
+
+        private static string GetBluetoothDeviceName(BluetoothDevice device)
+        {
+            return !string.IsNullOrEmpty(device.Alias)
+                ? device.Alias
+                : !string.IsNullOrEmpty(device.Name)
+                    ? device.Name
+                    : device.Address;
         }
 
         private static BluetoothDeviceConnectionStateEnum GetDeviceConnectionState(BluetoothDevice device)

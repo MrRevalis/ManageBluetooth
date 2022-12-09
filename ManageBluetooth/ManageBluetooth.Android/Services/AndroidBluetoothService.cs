@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using Android.Bluetooth;
 using Android.Content;
-
+using Android.OS;
 
 using Java.Util;
 
@@ -198,6 +198,46 @@ namespace ManageBluetooth.Droid.Services
             }
 
             return BluetoothDeviceConverter.ConvertToSimpleBluetoothDevice(device);
+        }
+
+        public void ChangeBluetoothDeviceAlias(string id, string newAlias)
+        {
+            var device = this._bluetoothAdapter.GetRemoteDevice(id);
+
+            if (device == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
+                {
+                    device.SetAlias(newAlias);
+                    return;
+                }
+
+                var changeAlias = device.Class.GetMethod("setAlias", Java.Lang.Class.FromType(typeof(Java.Lang.String)));
+                changeAlias.Invoke(device, newAlias);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+        }
+
+        public void UnbondWithBluetoothDevice(string id)
+        {
+            var device = this._bluetoothAdapter.GetRemoteDevice(id);
+
+            if (device == null)
+            {
+                return;
+            }
+
+            var removeBondMethod = device.Class.GetMethod("removeBond", (Java.Lang.Class[])null);
+            removeBondMethod.Invoke(device, (Java.Lang.Object[])null);
         }
     }
 }

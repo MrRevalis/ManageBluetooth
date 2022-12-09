@@ -9,7 +9,7 @@
     VerticalOptions="End"
     IsLightDismissEnabled="True"
     x:Name="this">
-    <cu:RoundedCustomFrame
+    <cu:RoundedFrame
         CornerRadius="20, 20, 0, 0"
         x:Name="RoundedFrame">
         <StackLayout>
@@ -18,8 +18,10 @@
                 TextColor="Black"
                 FontSize="19"
                 FontAttributes="Bold" />
-            <Entry
+            <cu:EntryWithLineColor
                 Text="{Binding DeviceName, Source={x:Reference this}}"
+                LineColor="{StaticResource LightCyan}"
+                LineColorFocused="{StaticResource DarkCyan}"
                 TextChanged="EntryTextChanged"/>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -64,9 +66,9 @@
                 </Label>
             </Grid>
         </StackLayout>
-        <cu:RoundedCustomFrame.GestureRecognizers>
+        <cu:RoundedFrame.GestureRecognizers>
             <PanGestureRecognizer
                 PanUpdated="EnumFrameTappedEvent" />
-        </cu:RoundedCustomFrame.GestureRecognizers>
-    </cu:RoundedCustomFrame>
+        </cu:RoundedFrame.GestureRecognizers>
+    </cu:RoundedFrame>
 </xct:Popup>
