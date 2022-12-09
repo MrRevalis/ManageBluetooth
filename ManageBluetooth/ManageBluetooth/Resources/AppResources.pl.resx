@@ -165,4 +165,7 @@
   <data name="CancelBond" xml:space="preserve">
     <value>Anuluj powiązanie</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
 </root>

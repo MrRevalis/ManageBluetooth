@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xct:Popup
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:cu="clr-namespace:ManageBluetooth.Custom"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    x:Class="ManageBluetooth.Custom.Controls.ChangeDeviceAliasPopup"
+    Color="Transparent"
+    VerticalOptions="End"
+    IsLightDismissEnabled="True"
+    x:Name="this">
+    <cu:RoundedCustomFrame
+        CornerRadius="20, 20, 0, 0"
+        x:Name="RoundedFrame">
+        <StackLayout>
+            <Label
+                Text="{Binding ChangeName.Localized, Source={x:Reference this}}"
+                TextColor="Black"
+                FontSize="19"
+                FontAttributes="Bold" />
+            <Entry
+                Text="{Binding DeviceName, Source={x:Reference this}}"
+                TextChanged="EntryTextChanged"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="5*" />
+                    <ColumnDefinition
+                        Width="1" />
+                    <ColumnDefinition
+                        Width="5*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Text="{Binding Cancel.Localized, Source={x:Reference this}}"
+                    TextColor="{StaticResource DarkCyan}"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Padding="5"
+                    Grid.Column="0"
+                    xct:TouchEffect.NativeAnimation="True">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="ClosePopupEvent" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <BoxView
+                    Color="#DDDDDD"
+                    Grid.Column="1" />
+                <Label
+                    Text="{Binding ChangeName.Localized, Source={x:Reference this}}"
+                    TextColor="{StaticResource LightCyan}"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Padding="5"
+                    IsEnabled="False"
+                    Grid.Column="2"
+                    x:Name="ChangeNameLabel"
+                    xct:TouchEffect.NativeAnimation="True">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="ClosePopupEvent"
+                            CommandParameter="True"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </StackLayout>
+        <cu:RoundedCustomFrame.GestureRecognizers>
+            <PanGestureRecognizer
+                PanUpdated="EnumFrameTappedEvent" />
+        </cu:RoundedCustomFrame.GestureRecognizers>
+    </cu:RoundedCustomFrame>
+</xct:Popup>

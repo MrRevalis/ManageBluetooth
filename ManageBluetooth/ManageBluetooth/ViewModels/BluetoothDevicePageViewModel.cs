@@ -2,11 +2,13 @@
 using System.Web;
 using System.Windows.Input;
 
+using ManageBluetooth.Custom.Controls;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
 using ManageBluetooth.Resources;
 using ManageBluetooth.ViewModels.Base;
 
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.Forms;
 
@@ -57,9 +59,15 @@ namespace ManageBluetooth.ViewModels
             }
         }
 
-        private void ChangeDeviceAlias()
+        private async void ChangeDeviceAlias()
         {
+            var changeAlias = new ChangeDeviceAliasPopup(this.Device.DeviceName);
 
+            var returnedValues = await NavigationExtensions.ShowPopupAsync(App.Current.MainPage.Navigation, changeAlias);
+            if (returnedValues != null)
+            {
+                this.Device.DeviceName = returnedValues as string;
+            }
         }
 
         private void CancelBondWithDevice()

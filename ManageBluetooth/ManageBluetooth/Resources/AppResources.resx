@@ -161,4 +161,8 @@
     <value>Cancel bond</value>
     <comment>Cancel bond</comment>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Cancel</comment>
+  </data>
 </root>

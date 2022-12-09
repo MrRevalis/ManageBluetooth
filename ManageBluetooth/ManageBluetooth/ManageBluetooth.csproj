@@ -27,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Custom\Controls\ChangeDeviceAliasPopup.xaml.cs">
+      <DependentUpon>ChangeDeviceAliasPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Resources\AppResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -36,6 +39,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Custom\Controls\BluetoothDevicesList.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Custom\Controls\ChangeDeviceAliasPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\AppResources.resx">
