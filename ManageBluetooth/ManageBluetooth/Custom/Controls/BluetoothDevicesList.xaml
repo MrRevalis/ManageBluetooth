@@ -4,6 +4,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:converter="clr-namespace:ManageBluetooth.Converters"
     xmlns:enum="clr-namespace:ManageBluetooth.Models.Enum"
+    xmlns:md="clr-namespace:MaterialDesign"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     BindableLayout.ItemsSource="{Binding Devices, Source={x:Reference this}}"
@@ -60,7 +61,7 @@
                     Grid.Row="0">
                     <Image.Source>
                         <FontImageSource
-                            FontFamily="FAS"
+                            FontFamily="Material"
                             Color="Black"
                             Glyph="{Binding DeviceClass, Converter={x:StaticResource BluetoothDeviceClassConverter}}" />
                     </Image.Source>
@@ -142,11 +143,14 @@
                     </Label>
                 </Grid>
                 <Button
+                    IsVisible="{Binding IsBonded}"
                     Grid.Row="0"
                     Grid.Column="2"
                     xct:TouchEffect.Command="{Binding BluetoothDeviceSettingsCommand, Source={x:Reference this}}"
                     xct:TouchEffect.CommandParameter="{Binding .}"
-                    Text="PAge" />
+                    FontFamily="Material"
+                    Text="{x:Static md:MaterialDesignIcons.Settings}"
+                    BackgroundColor="Transparent"/>
                 <BoxView
                     IsVisible="{Binding Path=., Converter={x:StaticResource SeparatorVisibilityConverter}, ConverterParameter={x:Reference Name=this}}"
                     HeightRequest="1"

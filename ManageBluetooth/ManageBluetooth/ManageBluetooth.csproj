@@ -7,15 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Fonts\FontAwesomeBrandsRegular.otf" />
-    <None Remove="Resources\Fonts\FontAwesomeRegular.otf" />
-    <None Remove="Resources\Fonts\FontAwesomeSolid.otf" />
+    <None Remove="Resources\Fonts\MaterialIconsRegular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Fonts\FontAwesomeBrandsRegular.otf" />
-    <EmbeddedResource Include="Resources\Fonts\FontAwesomeRegular.otf" />
-    <EmbeddedResource Include="Resources\Fonts\FontAwesomeSolid.otf" />
+    <EmbeddedResource Include="Resources\Fonts\MaterialIconsRegular.ttf" />
   </ItemGroup>
 
   <ItemGroup>

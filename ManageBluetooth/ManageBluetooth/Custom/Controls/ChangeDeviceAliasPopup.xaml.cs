@@ -37,7 +37,7 @@ namespace ManageBluetooth.Custom.Controls
             InitializeComponent();
             this.BindingContext = this;
 
-            this.Size = new Size(Application.Current.MainPage.Width, 200);
+            this.Size = new Size(Application.Current.MainPage.Width, 300);
         }
 
         private void EnumFrameTappedEvent(object sender, PanUpdatedEventArgs e)
@@ -52,7 +52,7 @@ namespace ManageBluetooth.Custom.Controls
                     }
                     break;
                 case GestureStatus.Completed:
-                    if (verticalPosition > 100)
+                    if (verticalPosition > 150)
                     {
                         RoundedFrame.TranslateTo(0, 200, 100);
                         Dismiss(null);

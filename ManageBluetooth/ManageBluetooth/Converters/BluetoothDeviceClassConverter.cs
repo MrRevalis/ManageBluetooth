@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-using FontAwesome;
-
 using ManageBluetooth.Converters.Base;
 using ManageBluetooth.Models.Enum;
+
+using MaterialDesign;
 
 namespace ManageBluetooth.Converters
 {
@@ -17,7 +17,7 @@ namespace ManageBluetooth.Converters
             switch (deviceClass)
             {
                 default:
-                    return FontAwesomeIcons.Question;
+                    return MaterialDesignIcons.DevicesOther;
             }
         }
     }
