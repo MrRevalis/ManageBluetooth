@@ -11,12 +11,10 @@ namespace ManageBluetooth.Services
     public class BluetoothService : IBluetoothService
     {
         private readonly IAndroidBluetoothService _androidBluetoothService;
-        private readonly IToastService _toastService;
 
         public BluetoothService()
         {
             this._androidBluetoothService = DependencyService.Get<IAndroidBluetoothService>();
-            this._toastService = DependencyService.Get<IToastService>();
         }
 
         public bool IsBluetoothEnabled()

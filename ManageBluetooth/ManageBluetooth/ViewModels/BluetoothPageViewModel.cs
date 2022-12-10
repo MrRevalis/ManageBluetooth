@@ -19,6 +19,7 @@ namespace ManageBluetooth.ViewModels
     public class BluetoothPageViewModel : BaseViewModel
     {
         private readonly IBluetoothService _bluetoothService;
+        private readonly IToastService _toastService;
 
         private ObservableCollection<SimpleBluetoothDevice> connectedDevicesList;
         public ObservableCollection<SimpleBluetoothDevice> BondedDevicesList
@@ -93,6 +94,7 @@ namespace ManageBluetooth.ViewModels
         public BluetoothPageViewModel(IBluetoothService bluetoothService)
         {
             this._bluetoothService = bluetoothService;
+            this._toastService = DependencyService.Get<IToastService>();
 
             this.BondedDevicesList = new ObservableCollection<SimpleBluetoothDevice>();
             this.AvailableDevicesList = new ObservableCollection<SimpleBluetoothDevice>();
@@ -296,6 +298,19 @@ namespace ManageBluetooth.ViewModels
                 else if (arg.DeviceState == BluetoothDeviceConnectionStateEnum.Connecting)
                 {
                     this.isConnectingWithDevice = true;
+                }
+
+                switch (arg.DeviceState)
+                {
+                    case BluetoothDeviceConnectionStateEnum.Connected:
+                        this.isConnectingWithDevice = true;
+                        break;
+                    case BluetoothDeviceConnectionStateEnum.Connecting:
+                        this.isConnectingWithDevice = false;
+                        break;
+                    case BluetoothDeviceConnectionStateEnum.Disconnected:
+                        this._toastService.ShortAlert(string.Format(AppResources.BluetoothEnabled, arg.DeviceName));
+                        break;
                 }
 
                 this.UpdateBluetoothDeviceProperty(arg);

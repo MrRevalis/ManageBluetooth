@@ -165,4 +165,8 @@
     <value>Cancel</value>
     <comment>Cancel</comment>
   </data>
+  <data name="ClosedConnection" xml:space="preserve">
+    <value>Bluetooth connection to {0} terminated.</value>
+    <comment>Bluetooth connection to {0} terminated.</comment>
+  </data>
 </root>

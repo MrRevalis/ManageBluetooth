@@ -4,6 +4,7 @@ using Android.Content;
 
 using Java.Lang;
 
+using ManageBluetooth.Droid.Helpers;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Enum;
 
@@ -23,20 +24,11 @@ namespace ManageBluetooth.Droid.Converters
             return new SimpleBluetoothDevice
             {
                 DeviceId = device.Address,
-                DeviceName = GetBluetoothDeviceName(device),
+                DeviceName = BluetoothDeviceHelper.GetBluetoothDeviceName(device),
                 IsBonded = device.BondState == Bond.Bonded ? true : false,
                 DeviceClass = GetDeviceType(device.BluetoothClass.DeviceClass),
                 DeviceState = GetDeviceConnectionState(device)
             };
-        }
-
-        private static string GetBluetoothDeviceName(BluetoothDevice device)
-        {
-            return !string.IsNullOrEmpty(device.Alias)
-                ? device.Alias
-                : !string.IsNullOrEmpty(device.Name)
-                    ? device.Name
-                    : device.Address;
         }
 
         private static BluetoothDeviceConnectionStateEnum GetDeviceConnectionState(BluetoothDevice device)

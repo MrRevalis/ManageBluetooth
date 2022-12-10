@@ -2,6 +2,7 @@
 using Android.Bluetooth;
 using Android.Content;
 
+using ManageBluetooth.Droid.Helpers;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
 using ManageBluetooth.Models.Enum;
@@ -32,6 +33,7 @@ namespace ManageBluetooth.Droid.Receivers
             var updateModel = new UpdateBluetoothConnectionStatusModel
             {
                 DeviceId = device.Address,
+                DeviceName = BluetoothDeviceHelper.GetBluetoothDeviceName(device),
             };
 
             if (action == BluetoothDevice.ActionAclConnected)

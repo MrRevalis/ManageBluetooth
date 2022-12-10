@@ -168,4 +168,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>Anuluj</value>
   </data>
+  <data name="ClosedConnection" xml:space="preserve">
+    <value>Zakończono połączenie Bluetooth z {0}.</value>
+  </data>
 </root>

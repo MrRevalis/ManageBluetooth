@@ -138,7 +138,10 @@ namespace ManageBluetooth.Droid.Services
                     Thread.Sleep(1000);
                     this._socket.Close();
 
-                    this._socket = null;
+                    if (!this._socket.IsConnected)
+                    {
+                        this._socket = null;
+                    }
                 }
                 catch (Exception e)
                 {

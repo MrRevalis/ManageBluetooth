@@ -115,6 +115,15 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bluetooth connection to {0} terminated..
+        /// </summary>
+        internal static string ClosedConnection {
+            get {
+                return ResourceManager.GetString("ClosedConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected.
         /// </summary>
         internal static string Connected {
