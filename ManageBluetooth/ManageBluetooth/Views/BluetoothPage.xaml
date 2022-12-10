@@ -138,6 +138,7 @@
                         <Frame
                             IsVisible="{Binding IsBluetoothEnabled}"
                             effects:RoundCornersEffect.CornerRadius="20"
+                            IsClippedToBounds="True"
                             Padding="0"
                             BackgroundColor="White">
                             <StackLayout>
