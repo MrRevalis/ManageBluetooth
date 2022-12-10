@@ -3,6 +3,7 @@
     x:Class="ManageBluetooth.Custom.Controls.BluetoothDevicesList"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:converter="clr-namespace:ManageBluetooth.Converters"
+    xmlns:effects="clr-namespace:ManageBluetooth.Custom.Effects;assembly=ManageBluetooth"
     xmlns:enum="clr-namespace:ManageBluetooth.Models.Enum"
     xmlns:md="clr-namespace:MaterialDesign"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -13,8 +14,6 @@
         <ResourceDictionary>
             <converter:BluetoothDeviceClassConverter
                 x:Key="BluetoothDeviceClassConverter" />
-            <converter:SeparatorVisibilityConverter
-                x:Key="SeparatorVisibilityConverter" />
             <converter:BluetoothDeviceConnectionStateToColorConverter
                 x:Key="BluetoothDeviceConnectionStateToColorConverter" />
         </ResourceDictionary>
@@ -150,9 +149,16 @@
                     xct:TouchEffect.CommandParameter="{Binding .}"
                     FontFamily="Material"
                     Text="{x:Static md:MaterialDesignIcons.Settings}"
-                    BackgroundColor="Transparent"/>
+                    TextColor="{StaticResource DarkBlue}"
+                    FontSize="Large"
+                    BackgroundColor="White"
+                    WidthRequest="50"
+                    HeightRequest="50">
+                    <Button.Effects>
+                        <effects:RoundEffect />
+                    </Button.Effects>
+                </Button>
                 <BoxView
-                    IsVisible="{Binding Path=., Converter={x:StaticResource SeparatorVisibilityConverter}, ConverterParameter={x:Reference Name=this}}"
                     HeightRequest="1"
                     Color="#DDDDDD"
                     Grid.Row="1"

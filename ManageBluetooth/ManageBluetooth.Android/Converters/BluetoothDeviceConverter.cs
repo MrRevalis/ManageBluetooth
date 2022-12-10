@@ -50,7 +50,20 @@ namespace ManageBluetooth.Droid.Converters
 
         private static BluetoothDeviceTypeEnum GetDeviceType(DeviceClass deviceClass)
         {
-            return BluetoothDeviceTypeEnum.Unknown;
+            switch (deviceClass)
+            {
+                case DeviceClass.AudioVideoWearableHeadset:
+                case DeviceClass.AudioVideoHeadphones:
+                    return BluetoothDeviceTypeEnum.Headphones;
+                case DeviceClass.AudioVideoVideoDisplayAndLoudspeaker:
+                    return BluetoothDeviceTypeEnum.TV;
+                case DeviceClass.ComputerLaptop:
+                    return BluetoothDeviceTypeEnum.Laptop;
+                case DeviceClass.ComputerDesktop:
+                    return BluetoothDeviceTypeEnum.Computer;
+                default:
+                    return BluetoothDeviceTypeEnum.Unknown;
+            }
         }
 
         public static bool isConnected(BluetoothDevice device)

@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Converters\BluetoothDeviceConverter.cs" />
     <Compile Include="Effects\RoundCornersEffectAndroid.cs" />
+    <Compile Include="Effects\RoundEffectAndroid.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Receivers\BluetoothDeviceBondedStateReceiver.cs" />
     <Compile Include="Receivers\BluetoothDeviceConnectionStateReceiver.cs" />

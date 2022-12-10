@@ -2,6 +2,10 @@
 {
     public enum BluetoothDeviceTypeEnum
     {
-        Unknown = 0,
+        Unknown,
+        Headphones,
+        TV,
+        Laptop,
+        Computer,
     }
 }

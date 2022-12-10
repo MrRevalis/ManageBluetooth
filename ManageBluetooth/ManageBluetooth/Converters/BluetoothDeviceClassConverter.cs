@@ -16,6 +16,18 @@ namespace ManageBluetooth.Converters
 
             switch (deviceClass)
             {
+                case BluetoothDeviceTypeEnum.Headphones:
+                    return MaterialDesignIcons.Headphones;
+
+                case BluetoothDeviceTypeEnum.TV:
+                    return MaterialDesignIcons.Tv;
+
+                case BluetoothDeviceTypeEnum.Laptop:
+                    return MaterialDesignIcons.Laptop;
+
+                case BluetoothDeviceTypeEnum.Computer:
+                    return MaterialDesignIcons.Computer;
+
                 default:
                     return MaterialDesignIcons.DevicesOther;
             }
