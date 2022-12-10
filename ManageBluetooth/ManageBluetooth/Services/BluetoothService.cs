@@ -3,11 +3,6 @@ using System.Threading.Tasks;
 
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
-using ManageBluetooth.Models.Constants;
-
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
 
 using Xamarin.Forms;
 
@@ -15,29 +10,18 @@ namespace ManageBluetooth.Services
 {
     public class BluetoothService : IBluetoothService
     {
-        private readonly IBluetoothLE _bluetooth;
-        private readonly IAdapter _adapter;
         private readonly IAndroidBluetoothService _androidBluetoothService;
         private readonly IToastService _toastService;
 
         public BluetoothService()
         {
-            this._bluetooth = CrossBluetoothLE.Current;
-            this._adapter = CrossBluetoothLE.Current.Adapter;
             this._androidBluetoothService = DependencyService.Get<IAndroidBluetoothService>();
             this._toastService = DependencyService.Get<IToastService>();
-
-            this._bluetooth.StateChanged += BluetootStateChanged;
-        }
-
-        ~BluetoothService()
-        {
-            this._bluetooth.StateChanged -= BluetootStateChanged;
         }
 
         public bool IsBluetoothEnabled()
         {
-            return this._bluetooth.IsOn;
+            return this._androidBluetoothService.IsBluetoothEnabled();
         }
 
         public void ChangeBluetoothState()
@@ -68,21 +52,6 @@ namespace ManageBluetooth.Services
             this._androidBluetoothService.StopBluetoothScanning();
         }
 
-        private void BluetootStateChanged(object sender, BluetoothStateChangedArgs e)
-        {
-            switch (e.NewState)
-            {
-                case BluetoothState.On:
-                    MessagingCenter.Send(this, BluetoothCommandConstants.BluetootStateChanged, true);
-                    break;
-                case BluetoothState.Off:
-                    MessagingCenter.Send(this, BluetoothCommandConstants.BluetootStateChanged, false);
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public bool IsBluetoothScanning()
         {
             return this._androidBluetoothService.BluetoothScanningStatus();
@@ -98,20 +67,21 @@ namespace ManageBluetooth.Services
             {
                 this._androidBluetoothService.BondWithDevice(device.DeviceId);
             }
-            //if (!result)
-            //{
-            //    device.DeviceState = Models.Enum.BluetoothDeviceConnectionStateEnum.Error;
-            //}
         }
 
         public void DisconnectWithBluetoothDevice()
         {
+            if (!this._androidBluetoothService.IsBluetoothEnabled())
+            {
+                return;
+            }
+
             this._androidBluetoothService.DisconnectWithDevice();
         }
 
         public SimpleBluetoothDevice GetBluetoothDevice(string id)
         {
-            if (!IsBluetoothEnabled())
+            if (!this._androidBluetoothService.IsBluetoothEnabled())
             {
                 return null;
             }

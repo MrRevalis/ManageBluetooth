@@ -142,18 +142,18 @@
                     </Label>
                 </Grid>
                 <Button
-                    IsVisible="{Binding IsBonded}"
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    xct:TouchEffect.Command="{Binding BluetoothDeviceSettingsCommand, Source={x:Reference this}}"
-                    xct:TouchEffect.CommandParameter="{Binding .}"
-                    FontFamily="Material"
                     Text="{x:Static md:MaterialDesignIcons.Settings}"
                     TextColor="{StaticResource DarkBlue}"
+                    FontFamily="Material"
                     FontSize="Large"
                     BackgroundColor="White"
                     WidthRequest="50"
-                    HeightRequest="50">
+                    HeightRequest="50"
+                    IsVisible="{Binding IsBonded}"
+                    xct:TouchEffect.Command="{Binding BluetoothDeviceSettingsCommand, Source={x:Reference this}}"
+                    xct:TouchEffect.CommandParameter="{Binding .}"
+                    Grid.Row="0"
+                    Grid.Column="2">
                     <Button.Effects>
                         <effects:RoundEffect />
                     </Button.Effects>

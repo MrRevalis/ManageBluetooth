@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +72,7 @@
     <Compile Include="Receivers\BluetoothDeviceConnectionStateReceiver.cs" />
     <Compile Include="Receivers\BluetoothDeviceDiscoveredReceiver.cs" />
     <Compile Include="Receivers\BluetoothDiscoveryActionReceiver.cs" />
+    <Compile Include="Receivers\BluetoothStateReceiver.cs" />
     <Compile Include="Renderers\EntryWithLineColorRenderer.cs" />
     <Compile Include="Renderers\RoundedFrameRenderer.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

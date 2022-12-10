@@ -104,9 +104,7 @@ namespace ManageBluetooth.Droid.Services
                 this.StopBluetoothScanning();
             }
 
-            await this.ConnectWithDevice(device);
-
-            return _socket != null;
+            return await this.ConnectWithDevice(device);
         }
 
 
@@ -238,6 +236,11 @@ namespace ManageBluetooth.Droid.Services
 
             var removeBondMethod = device.Class.GetMethod("removeBond", (Java.Lang.Class[])null);
             removeBondMethod.Invoke(device, (Java.Lang.Object[])null);
+        }
+
+        public bool IsBluetoothEnabled()
+        {
+            return this._bluetoothAdapter.IsEnabled;
         }
     }
 }

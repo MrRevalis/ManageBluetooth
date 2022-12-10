@@ -7,6 +7,7 @@ namespace ManageBluetooth.Interface
 {
     public interface IAndroidBluetoothService
     {
+        bool IsBluetoothEnabled();
         IEnumerable<SimpleBluetoothDevice> GetBondedDevices();
         void EnableBluetooth();
         void DisableBluetooth();

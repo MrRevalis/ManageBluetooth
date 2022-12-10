@@ -29,6 +29,7 @@ namespace ManageBluetooth.Droid
         private readonly BluetoothDeviceConnectionStateReceiver _deviceConnectionStateReceiver;
         private readonly BluetoothDeviceBondedStateReceiver _deviceBondedStateReceiver;
         private readonly BluetoothDeviceDiscoveredReceiver _deviceDiscoveredReceiver;
+        private readonly BluetoothStateReceiver _bluetoothStateReceiver;
 
         public MainActivity()
         {
@@ -36,6 +37,7 @@ namespace ManageBluetooth.Droid
             this._deviceConnectionStateReceiver = new BluetoothDeviceConnectionStateReceiver();
             this._deviceBondedStateReceiver = new BluetoothDeviceBondedStateReceiver();
             this._deviceDiscoveredReceiver = new BluetoothDeviceDiscoveredReceiver();
+            this._bluetoothStateReceiver = new BluetoothStateReceiver();
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -103,6 +105,9 @@ namespace ManageBluetooth.Droid
 
             var actionFound = new IntentFilter(BluetoothDevice.ActionFound);
             RegisterReceiver(this._deviceDiscoveredReceiver, actionFound);
+
+            var bluetoothState = new IntentFilter(BluetoothAdapter.ActionStateChanged);
+            RegisterReceiver(this._bluetoothStateReceiver, bluetoothState);
         }
     }
 }

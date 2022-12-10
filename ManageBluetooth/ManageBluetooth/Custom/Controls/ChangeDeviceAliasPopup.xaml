@@ -22,8 +22,9 @@
                 Text="{Binding DeviceName, Source={x:Reference this}}"
                 LineColor="{StaticResource LightCyan}"
                 LineColorFocused="{StaticResource DarkCyan}"
-                TextChanged="EntryTextChanged"/>
-            <Grid>
+                TextChanged="EntryTextChanged" />
+            <Grid
+                VerticalOptions="EndAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="5*" />
@@ -61,7 +62,7 @@
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer
                             Tapped="ClosePopupEvent"
-                            CommandParameter="True"/>
+                            CommandParameter="True" />
                     </Label.GestureRecognizers>
                 </Label>
             </Grid>
