@@ -119,19 +119,19 @@ namespace ManageBluetooth.ViewModels
                 || this.isConnectingWithDevice
                 || device == null)
             {
+                this._toastService.LongAlert(AppResources.LinkingError);
                 return;
             }
 
             if (device.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
             {
-                device.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnecting;
+                // device.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnecting;
                 this._bluetoothService.DisconnectWithBluetoothDevice();
             }
             else
             {
-                this.isConnectingWithDevice = true;
-                device.DeviceState = BluetoothDeviceConnectionStateEnum.Connecting;
-
+                //this.isConnectingWithDevice = true;
+                //device.DeviceState = BluetoothDeviceConnectionStateEnum.Connecting;
                 this._bluetoothService.ConnectWithBluetoothDevice(device);
             }
         }
@@ -291,25 +291,19 @@ namespace ManageBluetooth.ViewModels
 
             MessagingCenter.Subscribe<Application, UpdateBluetoothConnectionStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, (sender, arg) =>
             {
-                if (arg.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
-                {
-                    this.isConnectingWithDevice = false;
-                }
-                else if (arg.DeviceState == BluetoothDeviceConnectionStateEnum.Connecting)
-                {
-                    this.isConnectingWithDevice = true;
-                }
-
                 switch (arg.DeviceState)
                 {
                     case BluetoothDeviceConnectionStateEnum.Connected:
-                        this.isConnectingWithDevice = true;
-                        break;
-                    case BluetoothDeviceConnectionStateEnum.Connecting:
                         this.isConnectingWithDevice = false;
                         break;
+                    case BluetoothDeviceConnectionStateEnum.Connecting:
+                        this.isConnectingWithDevice = true;
+                        break;
                     case BluetoothDeviceConnectionStateEnum.Disconnected:
-                        this._toastService.ShortAlert(string.Format(AppResources.BluetoothEnabled, arg.DeviceName));
+                        this._toastService.ShortAlert(string.Format(AppResources.ClosedConnection, arg.DeviceName));
+                        break;
+                    default:
+                        this.isConnectingWithDevice = false;
                         break;
                 }
 

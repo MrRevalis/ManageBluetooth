@@ -1,75 +1,22 @@
-﻿using Android.App;
-using Android.Bluetooth;
-using Android.Content;
+﻿using Android.Bluetooth;
 
-using Java.Lang;
-
-using ManageBluetooth.Droid.Helpers;
+using ManageBluetooth.Droid.Extensions;
 using ManageBluetooth.Models;
-using ManageBluetooth.Models.Enum;
 
 namespace ManageBluetooth.Droid.Converters
 {
     public static class BluetoothDeviceConverter
     {
-        private static readonly BluetoothManager _bluetoothManager;
-
-        static BluetoothDeviceConverter()
-        {
-            _bluetoothManager = Application.Context.GetSystemService(Context.BluetoothService) as BluetoothManager;
-        }
-
         public static SimpleBluetoothDevice ConvertToSimpleBluetoothDevice(BluetoothDevice device)
         {
             return new SimpleBluetoothDevice
             {
                 DeviceId = device.Address,
-                DeviceName = BluetoothDeviceHelper.GetBluetoothDeviceName(device),
+                DeviceName = device.GetDeviceName(),
                 IsBonded = device.BondState == Bond.Bonded ? true : false,
-                DeviceClass = GetDeviceType(device.BluetoothClass.DeviceClass),
-                DeviceState = GetDeviceConnectionState(device)
+                DeviceClass = device.GetDeviceType(),
+                DeviceState = device.GetDeviceConnectionState()
             };
-        }
-
-        private static BluetoothDeviceConnectionStateEnum GetDeviceConnectionState(BluetoothDevice device)
-        {
-            if (isConnected(device))
-            {
-                return BluetoothDeviceConnectionStateEnum.Connected;
-            }
-            return BluetoothDeviceConnectionStateEnum.Disconnected;
-        }
-
-        private static BluetoothDeviceTypeEnum GetDeviceType(DeviceClass deviceClass)
-        {
-            switch (deviceClass)
-            {
-                case DeviceClass.AudioVideoWearableHeadset:
-                case DeviceClass.AudioVideoHeadphones:
-                    return BluetoothDeviceTypeEnum.Headphones;
-                case DeviceClass.AudioVideoVideoDisplayAndLoudspeaker:
-                    return BluetoothDeviceTypeEnum.TV;
-                case DeviceClass.ComputerLaptop:
-                    return BluetoothDeviceTypeEnum.Laptop;
-                case DeviceClass.ComputerDesktop:
-                    return BluetoothDeviceTypeEnum.Computer;
-                default:
-                    return BluetoothDeviceTypeEnum.Unknown;
-            }
-        }
-
-        public static bool isConnected(BluetoothDevice device)
-        {
-            try
-            {
-                var m = device.Class.GetMethod("isConnected", (Class[])null);
-                var connected = (bool)m.Invoke(device, (Object[])null);
-                return connected;
-            }
-            catch (Exception e)
-            {
-                throw new IllegalStateException(e);
-            }
         }
     }
 }

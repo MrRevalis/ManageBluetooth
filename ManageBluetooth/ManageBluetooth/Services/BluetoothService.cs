@@ -57,14 +57,15 @@ namespace ManageBluetooth.Services
 
         public async Task ConnectWithBluetoothDevice(SimpleBluetoothDevice device)
         {
-            if (device.IsBonded)
-            {
-                await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
-            }
-            else
-            {
-                this._androidBluetoothService.BondWithDevice(device.DeviceId);
-            }
+            //if (device.IsBonded)
+            //{
+            //    await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
+            //}
+            //else
+            //{
+            //    this._androidBluetoothService.BondWithDevice(device.DeviceId);
+            //}
+            await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
         }
 
         public void DisconnectWithBluetoothDevice()

@@ -2,7 +2,7 @@
 using Android.Bluetooth;
 using Android.Content;
 
-using ManageBluetooth.Droid.Helpers;
+using ManageBluetooth.Droid.Extensions;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
 using ManageBluetooth.Models.Enum;
@@ -33,20 +33,21 @@ namespace ManageBluetooth.Droid.Receivers
             var updateModel = new UpdateBluetoothConnectionStatusModel
             {
                 DeviceId = device.Address,
-                DeviceName = BluetoothDeviceHelper.GetBluetoothDeviceName(device),
+                DeviceName = device.GetDeviceName(),
             };
 
-            if (action == BluetoothDevice.ActionAclConnected)
+            switch (action)
             {
-                updateModel.DeviceState = BluetoothDeviceConnectionStateEnum.Connected;
-            }
-            else if (action == BluetoothDevice.ActionAclDisconnectRequested)
-            {
-                updateModel.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnecting;
-            }
-            else
-            {
-                updateModel.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnected;
+                case BluetoothDevice.ActionAclConnected:
+                    updateModel.DeviceState = BluetoothDeviceConnectionStateEnum.Connected;
+                    break;
+                case BluetoothDevice.ActionAclDisconnectRequested:
+                    updateModel.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnecting;
+                    break;
+                case BluetoothDevice.ActionAclDisconnected:
+                    updateModel.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnected;
+                    break;
+
             }
 
             MessagingCenter.Send(Xamarin.Forms.Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, updateModel);

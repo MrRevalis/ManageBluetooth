@@ -12,10 +12,13 @@ using Android.OS;
 using Java.Util;
 
 using ManageBluetooth.Droid.Converters;
+using ManageBluetooth.Droid.Extensions;
+using ManageBluetooth.Droid.Models.Constants;
 using ManageBluetooth.Droid.Services;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
+using ManageBluetooth.Models.Enum;
 
 using Xamarin.Forms;
 
@@ -27,7 +30,6 @@ namespace ManageBluetooth.Droid.Services
         private readonly BluetoothManager _bluetoothManager;
         private readonly BluetoothAdapter _bluetoothAdapter;
 
-        private const string _defaultUuidForSpp = "00001101-0000-1000-8000-00805f9b34fb";
         private BluetoothSocket _socket;
         private Stream deviceInputStream;
         private Stream deviceOutputStream;
@@ -128,8 +130,8 @@ namespace ManageBluetooth.Droid.Services
 
         public void DisconnectWithDevice()
         {
-            if (this._socket != null
-                && this._socket.IsConnected)
+            if (this._socket != null)
+            // && this._socket.IsConnected)
             {
                 try
                 {
@@ -137,7 +139,7 @@ namespace ManageBluetooth.Droid.Services
                     this.deviceOutputStream.Close();
                     Thread.Sleep(1000);
                     this._socket.Close();
-
+                    // this._socket.Dispose();
                     if (!this._socket.IsConnected)
                     {
                         this._socket = null;
@@ -159,12 +161,20 @@ namespace ManageBluetooth.Droid.Services
                 if (uuids != null
                     && uuids.Any())
                 {
+                    if (device.BondState != Bond.Bonded)
+                    {
+                        device.CreateBond();
+                    }
+
+                    this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Connecting);
+
                     foreach (var uuid in uuids)
                     {
                         try
                         {
-                            this._socket = device.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
+                            this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
                             await _socket.ConnectAsync();
+
                             this.deviceInputStream = this._socket.InputStream;
                             this.deviceOutputStream = this._socket.OutputStream;
 
@@ -174,15 +184,9 @@ namespace ManageBluetooth.Droid.Services
                         {
                             this._socket.Close();
                         }
-
-                        var statusModel = new UpdateBluetoothConnectionStatusModel
-                        {
-                            DeviceId = device.Address,
-                            DeviceState = Models.Enum.BluetoothDeviceConnectionStateEnum.Error
-                        };
-
-                        MessagingCenter.Send(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, statusModel);
                     }
+
+                    this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Error);
                 }
             }
 
@@ -218,7 +222,7 @@ namespace ManageBluetooth.Droid.Services
                     return;
                 }
 
-                var changeAlias = device.Class.GetMethod("setAlias", Java.Lang.Class.FromType(typeof(Java.Lang.String)));
+                var changeAlias = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.SetAlias, Java.Lang.Class.FromType(typeof(Java.Lang.String)));
                 changeAlias.Invoke(device, newAlias);
             }
             catch (Exception e)
@@ -237,13 +241,23 @@ namespace ManageBluetooth.Droid.Services
                 return;
             }
 
-            var removeBondMethod = device.Class.GetMethod("removeBond", (Java.Lang.Class[])null);
+            var removeBondMethod = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.RemoveBond, (Java.Lang.Class[])null);
             removeBondMethod.Invoke(device, (Java.Lang.Object[])null);
         }
 
         public bool IsBluetoothEnabled()
         {
             return this._bluetoothAdapter.IsEnabled;
+        }
+
+        private void UpdateBluetoothDeviceConnectionState(BluetoothDevice device, BluetoothDeviceConnectionStateEnum connectionState)
+        {
+            MessagingCenter.Send(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, new UpdateBluetoothConnectionStatusModel
+            {
+                DeviceId = device.Address,
+                DeviceName = device.GetDeviceName(),
+                DeviceState = connectionState,
+            });
         }
     }
 }

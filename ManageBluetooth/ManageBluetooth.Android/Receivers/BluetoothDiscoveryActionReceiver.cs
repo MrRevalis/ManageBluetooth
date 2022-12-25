@@ -25,11 +25,10 @@ namespace ManageBluetooth.Droid.Receivers
             if (action.Equals(BluetoothAdapter.ActionDiscoveryStarted, StringComparison.InvariantCulture))
             {
                 MessagingCenter.Send(Xamarin.Forms.Application.Current, BluetoothCommandConstants.BluetoothScanningStateChanged, true);
+                return;
             }
-            else if (action.Equals(BluetoothAdapter.ActionDiscoveryFinished, StringComparison.InvariantCulture))
-            {
-                MessagingCenter.Send(Xamarin.Forms.Application.Current, BluetoothCommandConstants.BluetoothScanningStateChanged, false);
-            }
+
+            MessagingCenter.Send(Xamarin.Forms.Application.Current, BluetoothCommandConstants.BluetoothScanningStateChanged, false);
         }
     }
 }

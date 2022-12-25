@@ -10,7 +10,7 @@ namespace ManageBluetooth.Droid.Receivers
 {
     [BroadcastReceiver]
     [IntentFilter(new[]
-{
+    {
         BluetoothAdapter.ActionStateChanged,
     })]
     public class BluetoothStateReceiver : BroadcastReceiver

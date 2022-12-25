@@ -4,6 +4,7 @@ using Android.Content;
 
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
+using ManageBluetooth.Models.Enum;
 
 using Xamarin.Forms;
 
@@ -42,7 +43,7 @@ namespace ManageBluetooth.Droid.Receivers
                     var model = new UpdateBluetoothConnectionStatusModel
                     {
                         DeviceId = device.Address,
-                        DeviceState = Models.Enum.BluetoothDeviceConnectionStateEnum.Connected
+                        DeviceState = BluetoothDeviceConnectionStateEnum.Connected
                     };
 
                     // MessagingCenter.Send(Xamarin.Forms.Application.Current, BluetoothCommandConstants.ConnectBluetoothDevice, device.Address);
