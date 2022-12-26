@@ -42,5 +42,37 @@ namespace ManageBluetooth.Extensions
                 source.Add(sortedItem);
             }
         }
+
+        public static int FindIndex<T>(this ObservableCollection<T> source, Predicate<T> match)
+        {
+            for (int i = 0; i < source.Count; i++)
+            {
+                if (match(source[i]))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static void Replace<T>(this ObservableCollection<T> source, Predicate<T> condition, T newValue)
+        {
+            var index = source.FindIndex(condition);
+
+            if (index != -1)
+            {
+                source.Insert(index, newValue);
+            }
+        }
+
+        public static void Replace<T>(this ObservableCollection<T> source, int index, T newValue)
+        {
+            if (index != -1)
+            {
+                source.Insert(index, newValue);
+            }
+        }
+
     }
 }

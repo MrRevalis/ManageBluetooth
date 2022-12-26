@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 
+using ManageBluetooth.Custom.Collection;
 using ManageBluetooth.Extensions;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
@@ -21,19 +22,9 @@ namespace ManageBluetooth.ViewModels
         private readonly IBluetoothService _bluetoothService;
         private readonly IToastService _toastService;
 
-        private ObservableCollection<SimpleBluetoothDevice> connectedDevicesList;
-        public ObservableCollection<SimpleBluetoothDevice> BondedDevicesList
-        {
-            get => connectedDevicesList;
-            set => SetProperty(ref connectedDevicesList, value);
-        }
-
-        private ObservableCollection<SimpleBluetoothDevice> availableDevicesList;
-        public ObservableCollection<SimpleBluetoothDevice> AvailableDevicesList
-        {
-            get => availableDevicesList;
-            set => SetProperty(ref availableDevicesList, value);
-        }
+        public ObservableCollection<SimpleBluetoothDevice> Devices { get; set; }
+        public FilteredObservableCollection<SimpleBluetoothDevice> BondedDevicesList { get; set; }
+        public FilteredObservableCollection<SimpleBluetoothDevice> AvailableDevicesList { get; set; }
 
         private bool isBluetoothEnabled;
         public bool IsBluetoothEnabled
@@ -96,8 +87,9 @@ namespace ManageBluetooth.ViewModels
             this._bluetoothService = bluetoothService;
             this._toastService = DependencyService.Get<IToastService>();
 
-            this.BondedDevicesList = new ObservableCollection<SimpleBluetoothDevice>();
-            this.AvailableDevicesList = new ObservableCollection<SimpleBluetoothDevice>();
+            this.Devices = new ObservableCollection<SimpleBluetoothDevice>();
+            this.BondedDevicesList = new FilteredObservableCollection<SimpleBluetoothDevice>(this.Devices, x => x.IsBonded);
+            this.AvailableDevicesList = new FilteredObservableCollection<SimpleBluetoothDevice>(this.Devices, x => !x.IsBonded);
 
             this.ChangeBluetoothStatusCommand = new Command(ChangeBluetoothState);
             this.StartStopScanningCommand = new Command(StartStopScanning);
@@ -125,13 +117,10 @@ namespace ManageBluetooth.ViewModels
 
             if (device.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
             {
-                // device.DeviceState = BluetoothDeviceConnectionStateEnum.Disconnecting;
                 this._bluetoothService.DisconnectWithBluetoothDevice();
             }
             else
             {
-                //this.isConnectingWithDevice = true;
-                //device.DeviceState = BluetoothDeviceConnectionStateEnum.Connecting;
                 this._bluetoothService.ConnectWithBluetoothDevice(device);
             }
         }
@@ -193,8 +182,11 @@ namespace ManageBluetooth.ViewModels
 
             this._bluetoothService.StartScanningForBluetoothDevices();
 
-            this.BondedDevicesList.Clear();
-            this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderBy(x => (int)x.DeviceState));
+            this.Devices.Clear();
+            this.Devices.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderByDescending(x => (int)x.DeviceState));
+
+            //this.BondedDevicesList.Clear();
+            //this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderBy(x => (int)x.DeviceState));
         }
 
         private void StopBluetoothScan()
@@ -204,63 +196,75 @@ namespace ManageBluetooth.ViewModels
                 this._bluetoothService.StopScanningForBluetoothDevices();
             }
 
-            this.AvailableDevicesList.Clear();
-            this.BondedDevicesList.Clear();
+            this.Devices.Clear();
+            //this.AvailableDevicesList.Clear();
+            //this.BondedDevicesList.Clear();
         }
 
         private void AddDiscoveredDevice(SimpleBluetoothDevice device)
         {
-            if (this.AvailableDevicesList.Any(x => x.DeviceId.Equals(device.DeviceId)))
-            {
-                return;
-            }
+            //if (this.AvailableDevicesList.Any(x => x.DeviceId.Equals(device.DeviceId)))
+            //{
+            //    return;
+            //}
 
-            this.AvailableDevicesList.Add(device);
+            //this.AvailableDevicesList.Add(device);
+
+            if (!this.Devices.Any(x => x.DeviceId == device.DeviceId))
+            {
+                this.Devices.Add(device);
+            }
         }
 
 
         private void UpdateBluetoothDeviceProperty(UpdateBluetoothConnectionStatusModel updateModel)
         {
-            var device = this.BondedDevicesList
+            //var device = this.BondedDevicesList
+            //    .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId && x.DeviceState != updateModel.DeviceState);
+
+            //if (device == null)
+            //{
+            //    return;
+            //}
+
+            //device.DeviceState = updateModel.DeviceState;
+            //this.BondedDevicesList = new FilteredObservableCollection<SimpleBluetoothDevice>(this.BondedDevicesList);
+
+            var device = this.Devices
                 .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId && x.DeviceState != updateModel.DeviceState);
 
-            if (device == null)
+            if (device != null)
             {
-                return;
+                device.DeviceState = updateModel.DeviceState;
             }
-
-            device.DeviceState = updateModel.DeviceState;
-            this.BondedDevicesList = new ObservableCollection<SimpleBluetoothDevice>(this.BondedDevicesList);
         }
 
         private void UpdateBluetoothDeviceProperty(UpdateBluetoothBondStatusModel updateModel)
         {
-            if (updateModel.IsBonded)
-            {
-                var device = this.AvailableDevicesList.FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
-                if (device == null)
-                {
-                    return;
-                }
+            var deviceIndex = this.Devices.FindIndex(x => x.DeviceId == updateModel.DeviceId);
 
-                device.IsBonded = updateModel.IsBonded;
-                this.AvailableDevicesList.Remove(device);
-                this.BondedDevicesList.Add(device);
-            }
-            else
+            if (deviceIndex != -1)
             {
-                var device = this.BondedDevicesList.FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
-                if (device == null)
-                {
-                    return;
-                }
+                var device = this.Devices[deviceIndex];
 
-                device.IsBonded = updateModel.IsBonded;
-                this.BondedDevicesList.Remove(device);
-                this.AvailableDevicesList.Add(device);
+                if (device.IsBonded != updateModel.IsBonded)
+                {
+                    device.IsBonded = updateModel.IsBonded;
+
+                    var newDevice = new SimpleBluetoothDevice
+                    {
+                        DeviceId = device.DeviceId,
+                        DeviceClass = device.DeviceClass,
+                        DeviceName = device.DeviceName,
+                        DeviceState = device.DeviceState,
+                        IsBonded = updateModel.IsBonded,
+                    };
+
+                    this.Devices.Replace(deviceIndex, device);
+                    // this.Devices[deviceIndex] = newDevice;
+                }
             }
         }
-
 
         private void SetUpMessaginCenter()
         {
@@ -282,11 +286,6 @@ namespace ManageBluetooth.ViewModels
                     this.IsBluetoothScanning = arg;
                     this.UpdateStartStopScanLabel();
                 }
-            });
-
-            MessagingCenter.Subscribe<Application, string>(Application.Current, BluetoothCommandConstants.ConnectBluetoothDevice, (sender, arg) =>
-            {
-                this.ConnectWithBluetoothDevice(this.BondedDevicesList.FirstOrDefault(x => x.DeviceId == arg));
             });
 
             MessagingCenter.Subscribe<Application, UpdateBluetoothConnectionStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, (sender, arg) =>

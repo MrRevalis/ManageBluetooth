@@ -14,6 +14,8 @@ namespace ManageBluetooth.Models
             get => deviceName;
             set
             {
+                if (deviceName == value) return;
+
                 deviceName = value;
                 OnPropertyChanged();
             }
@@ -25,6 +27,8 @@ namespace ManageBluetooth.Models
             get => isBonded;
             set
             {
+                if (isBonded == value) return;
+
                 isBonded = value;
                 OnPropertyChanged();
             }
@@ -36,6 +40,7 @@ namespace ManageBluetooth.Models
             get => deviceClass;
             set
             {
+                if (deviceClass == value) return;
                 deviceClass = value;
                 OnPropertyChanged();
             }
