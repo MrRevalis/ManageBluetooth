@@ -15,7 +15,6 @@ namespace ManageBluetooth.Interface
         bool IsBluetoothScanning();
         Task ConnectWithBluetoothDevice(SimpleBluetoothDevice device);
         void DisconnectWithBluetoothDevice();
-
         SimpleBluetoothDevice GetBluetoothDevice(string id);
         void ChangeBluetoothDeviceAlias(string id, string newAlias);
         void UnbondWithBluetoothDevice(string id);

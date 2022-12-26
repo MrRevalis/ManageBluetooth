@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,17 +7,15 @@ using System.Threading.Tasks;
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
+using Android.Runtime;
 
 using Java.Util;
 
 using ManageBluetooth.Droid.Converters;
-using ManageBluetooth.Droid.Extensions;
 using ManageBluetooth.Droid.Models.Constants;
 using ManageBluetooth.Droid.Services;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
-using ManageBluetooth.Models.Constants;
-using ManageBluetooth.Models.Enum;
 
 using Xamarin.Forms;
 
@@ -31,8 +28,8 @@ namespace ManageBluetooth.Droid.Services
         private readonly BluetoothAdapter _bluetoothAdapter;
 
         private BluetoothSocket _socket;
-        private Stream deviceInputStream;
-        private Stream deviceOutputStream;
+        private InputStreamInvoker deviceInputStream;
+        private OutputStreamInvoker deviceOutputStream;
 
         public AndroidBluetoothService()
         {
@@ -51,6 +48,11 @@ namespace ManageBluetooth.Droid.Services
             }
 
             return bondedDevices.Select(device => BluetoothDeviceConverter.ConvertToSimpleBluetoothDevice(device));
+        }
+
+        public bool IsBluetoothEnabled()
+        {
+            return this._bluetoothAdapter.IsEnabled;
         }
 
         public void DisableBluetooth()
@@ -85,7 +87,7 @@ namespace ManageBluetooth.Droid.Services
             }
         }
 
-        public bool BluetoothScanningStatus()
+        public bool IsBluetoothScanning()
         {
             return this._bluetoothAdapter.IsEnabled
                 ? this._bluetoothAdapter.IsDiscovering
@@ -101,7 +103,7 @@ namespace ManageBluetooth.Droid.Services
                 throw new Exception("Brak urzadzenia");
             }
 
-            if (this.BluetoothScanningStatus())
+            if (this.IsBluetoothScanning())
             {
                 this.StopBluetoothScanning();
             }
@@ -119,7 +121,7 @@ namespace ManageBluetooth.Droid.Services
                 throw new Exception("Brak urzadzenia");
             }
 
-            if (this.BluetoothScanningStatus())
+            if (this.IsBluetoothScanning())
             {
                 this.StopBluetoothScanning();
             }
@@ -130,8 +132,8 @@ namespace ManageBluetooth.Droid.Services
 
         public void DisconnectWithDevice()
         {
-            if (this._socket != null)
-            // && this._socket.IsConnected)
+            if (this._socket != null
+                && this._socket.IsConnected)
             {
                 try
                 {
@@ -163,12 +165,10 @@ namespace ManageBluetooth.Droid.Services
                 if (uuids != null
                     && uuids.Any())
                 {
-                    if (device.BondState != Bond.Bonded)
+                    if (device.BondState == Bond.None)
                     {
                         device.CreateBond();
                     }
-
-                    this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Connecting);
 
                     foreach (var uuid in uuids)
                     {
@@ -177,8 +177,8 @@ namespace ManageBluetooth.Droid.Services
                             this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
                             await _socket.ConnectAsync();
 
-                            this.deviceInputStream = this._socket.InputStream;
-                            this.deviceOutputStream = this._socket.OutputStream;
+                            this.deviceInputStream = this._socket.InputStream as InputStreamInvoker;
+                            this.deviceOutputStream = this._socket.OutputStream as OutputStreamInvoker;
 
                             return true;
                         }
@@ -187,8 +187,6 @@ namespace ManageBluetooth.Droid.Services
                             this._socket.Close();
                         }
                     }
-
-                    this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Error);
                 }
             }
 
@@ -245,21 +243,6 @@ namespace ManageBluetooth.Droid.Services
 
             var removeBondMethod = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.RemoveBond, (Java.Lang.Class[])null);
             removeBondMethod.Invoke(device, (Java.Lang.Object[])null);
-        }
-
-        public bool IsBluetoothEnabled()
-        {
-            return this._bluetoothAdapter.IsEnabled;
-        }
-
-        private void UpdateBluetoothDeviceConnectionState(BluetoothDevice device, BluetoothDeviceConnectionStateEnum connectionState)
-        {
-            MessagingCenter.Send(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, new UpdateBluetoothConnectionStatusModel
-            {
-                DeviceId = device.Address,
-                DeviceName = device.GetDeviceName(),
-                DeviceState = connectionState,
-            });
         }
     }
 }

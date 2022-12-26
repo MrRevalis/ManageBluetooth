@@ -2,9 +2,9 @@
 
 namespace ManageBluetooth.Helpers
 {
-    public static class Helper
+    public static class ResourceHelpers
     {
-        public static T Get<T>(string resourceName)
+        public static T GetResource<T>(string resourceName)
         {
             try
             {

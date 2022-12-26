@@ -128,9 +128,11 @@ namespace ManageBluetooth.ViewModels
         private void PageAppearing()
         {
             IsBusy = true;
+
             this.IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
             this.UpdateBluetoothProperties();
             this.StartStopBluetoothScanning();
+
             IsBusy = false;
         }
 
@@ -184,9 +186,6 @@ namespace ManageBluetooth.ViewModels
 
             this.Devices.Clear();
             this.Devices.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderByDescending(x => (int)x.DeviceState));
-
-            //this.BondedDevicesList.Clear();
-            //this.BondedDevicesList.AddRange(this._bluetoothService.GetBondedBluetoothDevices().OrderBy(x => (int)x.DeviceState));
         }
 
         private void StopBluetoothScan()
@@ -197,19 +196,10 @@ namespace ManageBluetooth.ViewModels
             }
 
             this.Devices.Clear();
-            //this.AvailableDevicesList.Clear();
-            //this.BondedDevicesList.Clear();
         }
 
         private void AddDiscoveredDevice(SimpleBluetoothDevice device)
         {
-            //if (this.AvailableDevicesList.Any(x => x.DeviceId.Equals(device.DeviceId)))
-            //{
-            //    return;
-            //}
-
-            //this.AvailableDevicesList.Add(device);
-
             if (!this.Devices.Any(x => x.DeviceId == device.DeviceId))
             {
                 this.Devices.Add(device);
@@ -217,29 +207,35 @@ namespace ManageBluetooth.ViewModels
         }
 
 
-        private void UpdateBluetoothDeviceProperty(UpdateBluetoothConnectionStatusModel updateModel)
+        private void UpdateBluetoothDeviceConnectionState(UpdateBluetoothConnectionStatusModel updateModel)
         {
-            //var device = this.BondedDevicesList
-            //    .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId && x.DeviceState != updateModel.DeviceState);
-
-            //if (device == null)
-            //{
-            //    return;
-            //}
-
-            //device.DeviceState = updateModel.DeviceState;
-            //this.BondedDevicesList = new FilteredObservableCollection<SimpleBluetoothDevice>(this.BondedDevicesList);
+            switch (updateModel.DeviceState)
+            {
+                case BluetoothDeviceConnectionStateEnum.Connected:
+                    this.isConnectingWithDevice = false;
+                    break;
+                case BluetoothDeviceConnectionStateEnum.Connecting:
+                    this.isConnectingWithDevice = true;
+                    break;
+                case BluetoothDeviceConnectionStateEnum.Disconnected:
+                    this._toastService.ShortAlert(string.Format(AppResources.ClosedConnection, updateModel.DeviceName));
+                    break;
+                default:
+                    this.isConnectingWithDevice = false;
+                    break;
+            }
 
             var device = this.Devices
-                .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId && x.DeviceState != updateModel.DeviceState);
+                .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
 
-            if (device != null)
+            if (device != null
+                && device.DeviceState != updateModel.DeviceState)
             {
                 device.DeviceState = updateModel.DeviceState;
             }
         }
 
-        private void UpdateBluetoothDeviceProperty(UpdateBluetoothBondStatusModel updateModel)
+        private void UpdateBluetoothDeviceBondState(UpdateBluetoothBondStatusModel updateModel)
         {
             var deviceIndex = this.Devices.FindIndex(x => x.DeviceId == updateModel.DeviceId);
 
@@ -249,8 +245,6 @@ namespace ManageBluetooth.ViewModels
 
                 if (device.IsBonded != updateModel.IsBonded)
                 {
-                    device.IsBonded = updateModel.IsBonded;
-
                     var newDevice = new SimpleBluetoothDevice
                     {
                         DeviceId = device.DeviceId,
@@ -260,8 +254,7 @@ namespace ManageBluetooth.ViewModels
                         IsBonded = updateModel.IsBonded,
                     };
 
-                    this.Devices.Replace(deviceIndex, device);
-                    // this.Devices[deviceIndex] = newDevice;
+                    this.Devices[deviceIndex] = newDevice;
                 }
             }
         }
@@ -290,28 +283,12 @@ namespace ManageBluetooth.ViewModels
 
             MessagingCenter.Subscribe<Application, UpdateBluetoothConnectionStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, (sender, arg) =>
             {
-                switch (arg.DeviceState)
-                {
-                    case BluetoothDeviceConnectionStateEnum.Connected:
-                        this.isConnectingWithDevice = false;
-                        break;
-                    case BluetoothDeviceConnectionStateEnum.Connecting:
-                        this.isConnectingWithDevice = true;
-                        break;
-                    case BluetoothDeviceConnectionStateEnum.Disconnected:
-                        this._toastService.ShortAlert(string.Format(AppResources.ClosedConnection, arg.DeviceName));
-                        break;
-                    default:
-                        this.isConnectingWithDevice = false;
-                        break;
-                }
-
-                this.UpdateBluetoothDeviceProperty(arg);
+                this.UpdateBluetoothDeviceConnectionState(arg);
             });
 
             MessagingCenter.Subscribe<Application, UpdateBluetoothBondStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceBondStateChanged, (sender, arg) =>
             {
-                this.UpdateBluetoothDeviceProperty(arg);
+                this.UpdateBluetoothDeviceBondState(arg);
             });
         }
 

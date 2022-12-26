@@ -85,12 +85,12 @@ namespace ManageBluetooth.Custom.Controls
                 || string.Equals(this.originalDeviceName, e.NewTextValue))
             {
                 this.ChangeNameLabel.IsEnabled = false;
-                this.ChangeNameLabel.TextColor = Helper.Get<Color>(LightCyan);
+                this.ChangeNameLabel.TextColor = Helpers.ResourceHelpers.GetResource<Color>(LightCyan);
             }
             else
             {
                 this.ChangeNameLabel.IsEnabled = true;
-                this.ChangeNameLabel.TextColor = Helper.Get<Color>(DarkCyan);
+                this.ChangeNameLabel.TextColor = Helpers.ResourceHelpers.GetResource<Color>(DarkCyan);
             }
         }
     }

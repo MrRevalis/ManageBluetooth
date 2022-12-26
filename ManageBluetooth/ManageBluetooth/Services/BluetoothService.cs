@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
+using ManageBluetooth.Models.Constants;
+using ManageBluetooth.Models.Enum;
 
 using Xamarin.Forms;
 
@@ -11,6 +13,8 @@ namespace ManageBluetooth.Services
     public class BluetoothService : IBluetoothService
     {
         private readonly IAndroidBluetoothService _androidBluetoothService;
+
+        private const int MaxConnectionTries = 3;
 
         public BluetoothService()
         {
@@ -52,20 +56,23 @@ namespace ManageBluetooth.Services
 
         public bool IsBluetoothScanning()
         {
-            return this._androidBluetoothService.BluetoothScanningStatus();
+            return this._androidBluetoothService.IsBluetoothScanning();
         }
 
         public async Task ConnectWithBluetoothDevice(SimpleBluetoothDevice device)
         {
-            //if (device.IsBonded)
-            //{
-            //    await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
-            //}
-            //else
-            //{
-            //    this._androidBluetoothService.BondWithDevice(device.DeviceId);
-            //}
-            await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
+            this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Connecting);
+            for (int i = 0; i < MaxConnectionTries; i++)
+            {
+                var result = await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
+
+                if (result)
+                {
+                    return;
+                }
+            }
+
+            this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Error);
         }
 
         public void DisconnectWithBluetoothDevice()
@@ -96,6 +103,16 @@ namespace ManageBluetooth.Services
         public void UnbondWithBluetoothDevice(string id)
         {
             this._androidBluetoothService.UnbondWithBluetoothDevice(id);
+        }
+
+        private void UpdateBluetoothDeviceConnectionState(SimpleBluetoothDevice device, BluetoothDeviceConnectionStateEnum connectionState)
+        {
+            MessagingCenter.Send(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged, new UpdateBluetoothConnectionStatusModel
+            {
+                DeviceId = device.DeviceId,
+                DeviceName = device.DeviceName,
+                DeviceState = connectionState,
+            });
         }
     }
 }

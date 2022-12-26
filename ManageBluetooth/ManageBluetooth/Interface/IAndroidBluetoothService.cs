@@ -13,7 +13,7 @@ namespace ManageBluetooth.Interface
         void DisableBluetooth();
         void StartBluetoothScanning();
         void StopBluetoothScanning();
-        bool BluetoothScanningStatus();
+        bool IsBluetoothScanning();
         Task<bool> ConnectWithDevice(string id);
         void DisconnectWithDevice();
         void BondWithDevice(string id);

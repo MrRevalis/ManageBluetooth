@@ -22,13 +22,17 @@ namespace ManageBluetooth.Converters
             {
                 case
                     BluetoothDeviceConnectionStateEnum.Connected:
-                    return Helper.Get<Color>(DarkCyan);
+                    return ResourceHelpers.GetResource<Color>(DarkCyan);
+
                 case BluetoothDeviceConnectionStateEnum.Disconnected:
                     return Color.Black;
+
                 case BluetoothDeviceConnectionStateEnum.Connecting:
-                    return Helper.Get<Color>(LightCyan);
+                    return ResourceHelpers.GetResource<Color>(LightCyan);
+
                 case BluetoothDeviceConnectionStateEnum.Disconnecting:
-                    return Helper.Get<Color>(LightCyan);
+                    return ResourceHelpers.GetResource<Color>(LightCyan);
+
                 default:
                     return Color.Black;
             }
