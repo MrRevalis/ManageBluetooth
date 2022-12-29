@@ -7,6 +7,7 @@
             public const string SetAlias = "setAlias";
             public const string RemoveBond = "removeBond";
             public const string IsConnected = "isConnected";
+            public const string CreateSocket = "createRfcommSocket";
         }
     }
 }

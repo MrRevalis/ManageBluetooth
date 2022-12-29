@@ -27,6 +27,8 @@ namespace ManageBluetooth.Droid.Services
         private readonly BluetoothManager _bluetoothManager;
         private readonly BluetoothAdapter _bluetoothAdapter;
 
+        private readonly ParcelUuid _defaultParcelUuid;
+
         private BluetoothSocket _socket;
         private InputStreamInvoker deviceInputStream;
         private OutputStreamInvoker deviceOutputStream;
@@ -35,6 +37,8 @@ namespace ManageBluetooth.Droid.Services
         {
             this._bluetoothManager = Android.App.Application.Context.GetSystemService(Context.BluetoothService) as BluetoothManager;
             this._bluetoothAdapter = this._bluetoothManager.Adapter;
+
+            this._defaultParcelUuid = new ParcelUuid(UUID.FromString("00001101-0000-1000-8000-00805f9b34fb"));
         }
 
         public IEnumerable<SimpleBluetoothDevice> GetBondedDevices()
@@ -170,11 +174,23 @@ namespace ManageBluetooth.Droid.Services
                         device.CreateBond();
                     }
 
+                    if (!uuids.Contains(_defaultParcelUuid))
+                    {
+                        uuids.Append(_defaultParcelUuid);
+                    }
+
                     foreach (var uuid in uuids)
                     {
                         try
                         {
+                            if (this._socket != null
+                                && this._socket.IsConnected)
+                            {
+                                return true;
+                            }
+
                             this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
+                            //this._socket = this.CreateSocket(device);
                             await _socket.ConnectAsync();
 
                             this.deviceInputStream = this._socket.InputStream as InputStreamInvoker;
@@ -243,6 +259,13 @@ namespace ManageBluetooth.Droid.Services
 
             var removeBondMethod = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.RemoveBond, (Java.Lang.Class[])null);
             removeBondMethod.Invoke(device, (Java.Lang.Object[])null);
+        }
+
+        private BluetoothSocket CreateSocket(BluetoothDevice device)
+        {
+            var m = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.CreateSocket, new Java.Lang.Class[] { Java.Lang.Integer.Type });
+
+            return (BluetoothSocket)m.Invoke(device, 1);
         }
     }
 }
