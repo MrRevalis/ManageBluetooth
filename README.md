@@ -1,6 +1,4 @@
-# ManageBluetooth
-
-# Movie Database
+# Manage Bluetooth
 
 ## Table of contents
 - [General info](#general-info)
