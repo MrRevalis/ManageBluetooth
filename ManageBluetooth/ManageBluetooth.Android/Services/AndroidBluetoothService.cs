@@ -16,6 +16,7 @@ using ManageBluetooth.Droid.Models.Constants;
 using ManageBluetooth.Droid.Services;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
+using ManageBluetooth.Models.Enum;
 
 using Xamarin.Forms;
 
@@ -104,7 +105,7 @@ namespace ManageBluetooth.Droid.Services
 
             if (device == null)
             {
-                throw new Exception("Brak urzadzenia");
+                throw new Exception(ErrorEnum.DeviceCannotBeFound.ToString());
             }
 
             if (this.IsBluetoothScanning())
@@ -122,7 +123,7 @@ namespace ManageBluetooth.Droid.Services
 
             if (device == null)
             {
-                throw new Exception("Brak urzadzenia");
+                throw new Exception(ErrorEnum.DeviceCannotBeFound.ToString());
             }
 
             if (this.IsBluetoothScanning())
@@ -132,7 +133,6 @@ namespace ManageBluetooth.Droid.Services
 
             device.CreateBond();
         }
-
 
         public void DisconnectWithDevice()
         {
@@ -153,9 +153,9 @@ namespace ManageBluetooth.Droid.Services
                         this._socket = null;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-
+                    throw new Exception(ErrorEnum.CannotConnectToTheDevice.ToString());
                 }
             }
         }
@@ -190,7 +190,9 @@ namespace ManageBluetooth.Droid.Services
                             }
 
                             this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
-                            //this._socket = this.CreateSocket(device);
+                            // this._socket = device.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
+                            // this._socket = this.CreateSocket(device); 
+
                             await _socket.ConnectAsync();
 
                             this.deviceInputStream = this._socket.InputStream as InputStreamInvoker;
@@ -198,7 +200,7 @@ namespace ManageBluetooth.Droid.Services
 
                             return true;
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             this._socket.Close();
                         }
@@ -227,7 +229,7 @@ namespace ManageBluetooth.Droid.Services
 
             if (device == null)
             {
-                return;
+                throw new Exception(ErrorEnum.DeviceCannotBeFound.ToString());
             }
 
             try
@@ -241,11 +243,10 @@ namespace ManageBluetooth.Droid.Services
                 var changeAlias = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.SetAlias, Java.Lang.Class.FromType(typeof(Java.Lang.String)));
                 changeAlias.Invoke(device, newAlias);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
+                throw new Exception(ErrorEnum.CannotChangeDeviceAlias.ToString());
             }
-
         }
 
         public void UnbondWithBluetoothDevice(string id)
@@ -254,7 +255,7 @@ namespace ManageBluetooth.Droid.Services
 
             if (device == null)
             {
-                return;
+                throw new Exception(ErrorEnum.DeviceCannotBeFound.ToString());
             }
 
             var removeBondMethod = device.Class.GetMethod(Constants.BluetoothDeviceMethodNames.RemoveBond, (Java.Lang.Class[])null);

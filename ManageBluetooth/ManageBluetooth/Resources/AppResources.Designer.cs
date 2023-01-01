@@ -106,6 +106,24 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot change device alias.
+        /// </summary>
+        internal static string CannotChangeDeviceAlias {
+            get {
+                return ResourceManager.GetString("CannotChangeDeviceAlias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to connect to the device.
+        /// </summary>
+        internal static string CannotConnectToTheDevice {
+            get {
+                return ResourceManager.GetString("CannotConnectToTheDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change name.
         /// </summary>
         internal static string ChangeName {
@@ -156,6 +174,15 @@ namespace ManageBluetooth.Resources {
         internal static string Connecting {
             get {
                 return ResourceManager.GetString("Connecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device cannot be found.
+        /// </summary>
+        internal static string DeviceCannotBeFound {
+            get {
+                return ResourceManager.GetString("DeviceCannotBeFound", resourceCulture);
             }
         }
         
@@ -219,6 +246,15 @@ namespace ManageBluetooth.Resources {
         internal static string Stop {
             get {
                 return ResourceManager.GetString("Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error.
+        /// </summary>
+        internal static string UnknownError {
+            get {
+                return ResourceManager.GetString("UnknownError", resourceCulture);
             }
         }
     }

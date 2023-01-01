@@ -54,7 +54,7 @@ namespace ManageBluetooth.ViewModels
 
             if (this.Device == null)
             {
-                this._toastService.ShortAlert("Brak urzadzenia");
+                this._toastService.ShortAlert(AppResources.DeviceCannotBeFound);
                 Shell.Current.GoToAsync("..");
             }
         }

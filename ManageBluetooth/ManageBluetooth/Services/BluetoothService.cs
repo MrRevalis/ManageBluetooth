@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using ManageBluetooth.Extensions;
+using ManageBluetooth.Helpers;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
@@ -64,7 +66,8 @@ namespace ManageBluetooth.Services
             this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Connecting);
             for (int i = 0; i < MaxConnectionTries; i++)
             {
-                var result = await this._androidBluetoothService.ConnectWithDevice(device.DeviceId);
+                var result = await this._androidBluetoothService.ConnectWithDevice(device.DeviceId)
+                    .ExecuteAsyncOperation();
 
                 if (result)
                 {
@@ -97,12 +100,12 @@ namespace ManageBluetooth.Services
 
         public void ChangeBluetoothDeviceAlias(string id, string newAlias)
         {
-            this._androidBluetoothService.ChangeBluetoothDeviceAlias(id, newAlias);
+            ExceptionHelper.CatchException(() => this._androidBluetoothService.ChangeBluetoothDeviceAlias(id, newAlias));
         }
 
         public void UnbondWithBluetoothDevice(string id)
         {
-            this._androidBluetoothService.UnbondWithBluetoothDevice(id);
+            ExceptionHelper.CatchException(() => this._androidBluetoothService.UnbondWithBluetoothDevice(id));
         }
 
         private void UpdateBluetoothDeviceConnectionState(SimpleBluetoothDevice device, BluetoothDeviceConnectionStateEnum connectionState)

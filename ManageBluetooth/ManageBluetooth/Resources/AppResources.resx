@@ -169,4 +169,20 @@
     <value>Bluetooth connection to {0} terminated.</value>
     <comment>Bluetooth connection to {0} terminated.</comment>
   </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error</value>
+    <comment>Unknown error</comment>
+  </data>
+  <data name="DeviceCannotBeFound" xml:space="preserve">
+    <value>Device cannot be found</value>
+    <comment>Device cannot be found</comment>
+  </data>
+  <data name="CannotConnectToTheDevice" xml:space="preserve">
+    <value>Unable to connect to the device</value>
+    <comment>Unable to connect to the device</comment>
+  </data>
+  <data name="CannotChangeDeviceAlias" xml:space="preserve">
+    <value>Cannot change device alias</value>
+    <comment>Cannot change device alias</comment>
+  </data>
 </root>

@@ -171,4 +171,16 @@
   <data name="ClosedConnection" xml:space="preserve">
     <value>Zakończono połączenie Bluetooth z {0}.</value>
   </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Nieznany błąd</value>
+  </data>
+  <data name="DeviceCannotBeFound" xml:space="preserve">
+    <value>Nie można znaleźć urządzenia</value>
+  </data>
+  <data name="CannotConnectToTheDevice" xml:space="preserve">
+    <value>Nie można połączyć się z urządzeniem</value>
+  </data>
+  <data name="CannotChangeDeviceAlias" xml:space="preserve">
+    <value>Nie można zmienić aliasu urządzenia</value>
+  </data>
 </root>
