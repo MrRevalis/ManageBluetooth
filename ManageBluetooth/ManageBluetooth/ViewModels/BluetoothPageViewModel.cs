@@ -257,6 +257,8 @@ namespace ManageBluetooth.ViewModels
 
                 if (device.IsBonded != updateModel.IsBonded)
                 {
+                    device.IsBonded = updateModel.IsBonded;
+
                     var newDevice = new SimpleBluetoothDevice(device);
                     this.Devices[deviceIndex] = newDevice;
                 }

@@ -32,7 +32,7 @@ namespace ManageBluetooth.Droid.Receivers
                 var updateModel = new UpdateBluetoothBondStatusModel
                 {
                     DeviceId = device.Address,
-                    IsBonded = device.BondState != Bond.None ? true : false,
+                    IsBonded = device.BondState == Bond.Bonded ? true : false,
                 };
 
                 try
