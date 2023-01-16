@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,15 +32,15 @@ namespace ManageBluetooth.Droid.Services
         private readonly ParcelUuid _defaultParcelUuid;
 
         private BluetoothSocket _socket;
-        private InputStreamInvoker deviceInputStream;
-        private OutputStreamInvoker deviceOutputStream;
+        private Stream deviceInputStream;
+        private Stream deviceOutputStream;
 
         public AndroidBluetoothService()
         {
             this._bluetoothManager = Android.App.Application.Context.GetSystemService(Context.BluetoothService) as BluetoothManager;
             this._bluetoothAdapter = this._bluetoothManager.Adapter;
 
-            this._defaultParcelUuid = new ParcelUuid(UUID.FromString("00001101-0000-1000-8000-00805f9b34fb"));
+            this._defaultParcelUuid = new ParcelUuid(UUID.FromString("00001101-0000-1000-8000-00805F9B34FB"));
         }
 
         public IEnumerable<SimpleBluetoothDevice> GetBondedDevices()
@@ -142,15 +143,34 @@ namespace ManageBluetooth.Droid.Services
                 try
                 {
                     this.deviceInputStream.Close();
+                    this.deviceInputStream = null;
+
                     this.deviceOutputStream.Close();
+                    this.deviceOutputStream = null;
 
                     Thread.Sleep(1000);
 
-                    this._socket.Close();
+                    //this._socket.Close();
 
-                    if (!this._socket.IsConnected)
+                    //if (!this._socket.IsConnected)
+                    //{
+                    //    this._socket = null;
+                    //}
+
+                    var inputStream = this._socket.InputStream as InputStreamInvoker;
+                    while (true)
                     {
-                        this._socket = null;
+                        try
+                        {
+                            var nextByte = inputStream.ReadByte();
+                        }
+                        catch (Java.IO.IOException)
+                        {
+                            this._socket.Close();
+                            this._socket = null;
+
+                            break;
+                        }
                     }
                 }
                 catch (Exception)
@@ -169,10 +189,10 @@ namespace ManageBluetooth.Droid.Services
                 if (uuids != null
                     && uuids.Any())
                 {
-                    if (device.BondState == Bond.None)
-                    {
-                        device.CreateBond();
-                    }
+                    //if (device.BondState == Bond.None)
+                    //{
+                    //    device.CreateBond();
+                    //}
 
                     if (!uuids.Contains(_defaultParcelUuid))
                     {
@@ -191,12 +211,14 @@ namespace ManageBluetooth.Droid.Services
 
                             this._socket = device.CreateRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
                             // this._socket = device.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
-                            // this._socket = this.CreateSocket(device); 
+                            // this._socket = this.CreateSocket(device);
+
+                            Thread.Sleep(1000);
 
                             await _socket.ConnectAsync();
 
-                            this.deviceInputStream = this._socket.InputStream as InputStreamInvoker;
-                            this.deviceOutputStream = this._socket.OutputStream as OutputStreamInvoker;
+                            this.deviceInputStream = this._socket.InputStream;
+                            this.deviceOutputStream = this._socket.OutputStream;
 
                             return true;
                         }

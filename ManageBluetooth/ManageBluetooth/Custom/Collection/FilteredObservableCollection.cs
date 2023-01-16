@@ -19,6 +19,7 @@ namespace ManageBluetooth.Custom.Collection
         private void Fill(ObservableCollection<T> source)
         {
             Clear();
+
             foreach (T item in source)
             {
                 if (Filter(item))

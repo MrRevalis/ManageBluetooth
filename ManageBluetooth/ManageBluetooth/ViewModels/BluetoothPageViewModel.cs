@@ -4,6 +4,7 @@ using System.Windows.Input;
 
 using ManageBluetooth.Custom.Collection;
 using ManageBluetooth.Extensions;
+using ManageBluetooth.Helpers;
 using ManageBluetooth.Interface;
 using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
@@ -117,7 +118,8 @@ namespace ManageBluetooth.ViewModels
 
             if (device.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
             {
-                this._bluetoothService.DisconnectWithBluetoothDevice();
+                ExceptionHelper.CatchException(() => this._bluetoothService.DisconnectWithBluetoothDevice());
+
             }
             else
             {
@@ -131,6 +133,7 @@ namespace ManageBluetooth.ViewModels
 
             this.IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
             this.UpdateBluetoothProperties();
+            this.UpdateStartStopScanLabel();
             this.StartStopBluetoothScanning();
 
             IsBusy = false;
@@ -225,13 +228,22 @@ namespace ManageBluetooth.ViewModels
                     break;
             }
 
-            var device = this.Devices
-                .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
-
-            if (device != null
-                && device.DeviceState != updateModel.DeviceState)
+            var deviceIndex = this.Devices.FindIndex(x => x.DeviceId == updateModel.DeviceId);
+            if (deviceIndex != Constants.NotFoundIndex
+                && this.Devices[deviceIndex]?.DeviceState != updateModel.DeviceState)
             {
-                device.DeviceState = updateModel.DeviceState;
+                var deviceModel = this.Devices[deviceIndex];
+                deviceModel.DeviceState = updateModel.DeviceState;
+
+                //var deviceModel = this.Devices
+                //    .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
+                //deviceModel.DeviceState = updateModel.DeviceState;
+
+                if (deviceModel.DeviceState == BluetoothDeviceConnectionStateEnum.Connected
+                    && deviceIndex != Constants.FirstIndex)
+                {
+                    this.Devices.Move(deviceIndex, Constants.FirstIndex);
+                }
             }
         }
 
@@ -239,21 +251,13 @@ namespace ManageBluetooth.ViewModels
         {
             var deviceIndex = this.Devices.FindIndex(x => x.DeviceId == updateModel.DeviceId);
 
-            if (deviceIndex != -1)
+            if (deviceIndex != Constants.NotFoundIndex)
             {
                 var device = this.Devices[deviceIndex];
 
                 if (device.IsBonded != updateModel.IsBonded)
                 {
-                    var newDevice = new SimpleBluetoothDevice
-                    {
-                        DeviceId = device.DeviceId,
-                        DeviceClass = device.DeviceClass,
-                        DeviceName = device.DeviceName,
-                        DeviceState = device.DeviceState,
-                        IsBonded = updateModel.IsBonded,
-                    };
-
+                    var newDevice = new SimpleBluetoothDevice(device);
                     this.Devices[deviceIndex] = newDevice;
                 }
             }
@@ -303,6 +307,7 @@ namespace ManageBluetooth.ViewModels
             {
                 this.IsBluetoothEnabledMessage = new LocalizedString(() => AppResources.BluetoothDisabled);
                 this.BluetoothState = new LocalizedString(() => AppResources.Disabled);
+                this.isConnectingWithDevice = false;
             }
         }
 

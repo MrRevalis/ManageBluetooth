@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using ManageBluetooth.Models.Constants;
+
 namespace ManageBluetooth.Extensions
 {
     public static class ObservableCollectionExtensions
@@ -53,14 +55,14 @@ namespace ManageBluetooth.Extensions
                 }
             }
 
-            return -1;
+            return Constants.NotFoundIndex;
         }
 
         public static void Replace<T>(this ObservableCollection<T> source, Predicate<T> condition, T newValue)
         {
             var index = source.FindIndex(condition);
 
-            if (index != -1)
+            if (index != Constants.NotFoundIndex)
             {
                 source.Insert(index, newValue);
             }
@@ -68,11 +70,10 @@ namespace ManageBluetooth.Extensions
 
         public static void Replace<T>(this ObservableCollection<T> source, int index, T newValue)
         {
-            if (index != -1)
+            if (index != Constants.NotFoundIndex)
             {
                 source.Insert(index, newValue);
             }
         }
-
     }
 }

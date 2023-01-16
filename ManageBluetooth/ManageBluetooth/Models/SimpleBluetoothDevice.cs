@@ -7,7 +7,22 @@ namespace ManageBluetooth.Models
 {
     public class SimpleBluetoothDevice : INotifyPropertyChanged
     {
+        public SimpleBluetoothDevice()
+        {
+
+        }
+
+        public SimpleBluetoothDevice(SimpleBluetoothDevice oldDevice)
+        {
+            this.DeviceId = oldDevice.DeviceId;
+            this.DeviceName = oldDevice.DeviceName;
+            this.IsBonded = oldDevice.isBonded;
+            this.DeviceClass = oldDevice.DeviceClass;
+            this.DeviceState = oldDevice.DeviceState;
+        }
+
         public string DeviceId { get; set; }
+
         private string deviceName;
         public string DeviceName
         {
