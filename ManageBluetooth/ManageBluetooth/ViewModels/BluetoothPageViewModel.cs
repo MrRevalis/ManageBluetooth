@@ -221,6 +221,7 @@ namespace ManageBluetooth.ViewModels
                     this.isConnectingWithDevice = true;
                     break;
                 case BluetoothDeviceConnectionStateEnum.Disconnected:
+                    this.isConnectingWithDevice = false;
                     this._toastService.ShortAlert(string.Format(AppResources.ClosedConnection, updateModel.DeviceName));
                     break;
                 default:
@@ -255,12 +256,27 @@ namespace ManageBluetooth.ViewModels
             {
                 var device = this.Devices[deviceIndex];
 
+                //if (device.IsBonded != updateModel.IsBonded)
+                //{
+                //    device.IsBonded = updateModel.IsBonded;
+
+                //    var newDevice = new SimpleBluetoothDevice(device);
+                //    this.Devices[deviceIndex] = newDevice;
+                //}
+
                 if (device.IsBonded != updateModel.IsBonded)
                 {
-                    device.IsBonded = updateModel.IsBonded;
+                    if (updateModel.IsBonded)
+                    {
+                        device.IsBonded = updateModel.IsBonded;
 
-                    var newDevice = new SimpleBluetoothDevice(device);
-                    this.Devices[deviceIndex] = newDevice;
+                        var newDevice = new SimpleBluetoothDevice(device);
+                        this.Devices[deviceIndex] = newDevice;
+                    }
+                    else
+                    {
+                        this.Devices.RemoveAt(deviceIndex);
+                    }
                 }
             }
         }

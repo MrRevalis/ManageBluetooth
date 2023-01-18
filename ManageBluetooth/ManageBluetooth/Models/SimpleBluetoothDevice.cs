@@ -9,7 +9,6 @@ namespace ManageBluetooth.Models
     {
         public SimpleBluetoothDevice()
         {
-
         }
 
         public SimpleBluetoothDevice(SimpleBluetoothDevice oldDevice)
@@ -56,6 +55,7 @@ namespace ManageBluetooth.Models
             set
             {
                 if (deviceClass == value) return;
+
                 deviceClass = value;
                 OnPropertyChanged();
             }
@@ -68,6 +68,7 @@ namespace ManageBluetooth.Models
             set
             {
                 if (deviceState == value) return;
+
                 deviceState = value;
                 OnPropertyChanged();
             }
