@@ -183,4 +183,7 @@
   <data name="CannotChangeDeviceAlias" xml:space="preserve">
     <value>Nie można zmienić aliasu urządzenia</value>
   </data>
+  <data name="ErrorDisconnecting" xml:space="preserve">
+    <value>Podczas rozłączania z urządzeniem wystąpił błąd</value>
+  </data>
 </root>

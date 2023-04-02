@@ -27,6 +27,29 @@
                     Value="#F6F6F6" />
             </Style>
 
+            <Style
+                TargetType="Label"
+                x:Key="IsBluetoothEnabledLabelStyle">
+                <Style.Triggers>
+                    <DataTrigger
+                        TargetType="Label"
+                        Binding="{Binding IsBluetoothEnabled}"
+                        Value="True">
+                        <Setter
+                            Property="TextColor"
+                            Value="White" />
+                    </DataTrigger>
+                    <DataTrigger
+                        TargetType="Label"
+                        Binding="{Binding IsBluetoothEnabled}"
+                        Value="False">
+                        <Setter
+                            Property="TextColor"
+                            Value="Black" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
             <x:String x:Key="ApplicationName">Bluetooth</x:String>
             
             <Color

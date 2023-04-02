@@ -5,8 +5,10 @@
     xmlns:control="clr-namespace:ManageBluetooth.Custom.Controls"
     xmlns:cu="clr-namespace:ManageBluetooth.Custom"
     xmlns:effects="clr-namespace:ManageBluetooth.Custom.Effects;assembly=ManageBluetooth"
+    xmlns:vm="clr-namespace:ManageBluetooth.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    x:DataType="vm:BluetoothPageViewModel">
     <ContentPage.Resources>
         <ResourceDictionary></ResourceDictionary>
     </ContentPage.Resources>
@@ -15,6 +17,9 @@
         <xct:EventToCommandBehavior
             EventName="Appearing"
             Command="{Binding PageAppearingCommand}" />
+        <xct:EventToCommandBehavior
+            EventName="Disappearing"
+            Command="{Binding PageDisappearingCommand}" />
     </ContentPage.Behaviors>
 
     <Shell.TitleView>
@@ -59,32 +64,9 @@
                     </Grid.ColumnDefinitions>
                     <Label
                         Text="{Binding BluetoothState.Localized}"
+                        Style="{StaticResource IsBluetoothEnabledLabelStyle}"
                         FontSize="Body"
-                        Grid.Column="0">
-                        <Label.Style>
-                            <Style
-                                TargetType="Label">
-                                <Style.Triggers>
-                                    <DataTrigger
-                                        TargetType="Label"
-                                        Binding="{Binding IsBluetoothEnabled}"
-                                        Value="True">
-                                        <Setter
-                                            Property="TextColor"
-                                            Value="White" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        TargetType="Label"
-                                        Binding="{Binding IsBluetoothEnabled}"
-                                        Value="False">
-                                        <Setter
-                                            Property="TextColor"
-                                            Value="Black" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Label.Style>
-                    </Label>
+                        Grid.Column="0" />
                     <Switch
                         VerticalOptions="Start"
                         IsToggled="{Binding IsBluetoothEnabled}"

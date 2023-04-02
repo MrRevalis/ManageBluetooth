@@ -214,6 +214,15 @@ namespace ManageBluetooth.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while disconnecting from the device.
+        /// </summary>
+        internal static string ErrorDisconnecting {
+            get {
+                return ResourceManager.GetString("ErrorDisconnecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Linking error.
         /// </summary>
         internal static string LinkingError {

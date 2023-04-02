@@ -77,6 +77,7 @@ namespace ManageBluetooth.ViewModels
         }
         public ICommand ChangeBluetoothStatusCommand { get; set; }
         public ICommand PageAppearingCommand { get; set; }
+        public ICommand PageDisappearingCommand { get; set; }
         public ICommand StartStopScanningCommand { get; set; }
         public ICommand ConnectWithBluetoothDeviceCommand { get; set; }
         public ICommand BondWithBluetoothDeviceCommand { get; set; }
@@ -92,13 +93,17 @@ namespace ManageBluetooth.ViewModels
             this.BondedDevicesList = new FilteredObservableCollection<SimpleBluetoothDevice>(this.Devices, x => x.IsBonded);
             this.AvailableDevicesList = new FilteredObservableCollection<SimpleBluetoothDevice>(this.Devices, x => !x.IsBonded);
 
+            this.PageAppearingCommand = new Command(PageAppearing);
+            this.PageDisappearingCommand = new Command(PageDisappearing);
+
             this.ChangeBluetoothStatusCommand = new Command(ChangeBluetoothState);
             this.StartStopScanningCommand = new Command(StartStopScanning);
             this.ConnectWithBluetoothDeviceCommand = new Command<SimpleBluetoothDevice>((device) => ConnectWithBluetoothDevice(device));
             this.BondWithBluetoothDeviceCommand = new Command<SimpleBluetoothDevice>((device) => BondWithBluetoothDevice(device));
-            this.PageAppearingCommand = new Command(PageAppearing);
 
-            this.SetUpMessaginCenter();
+            this.IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
+            this.UpdateBluetoothProperties();
+            this.UpdateStartStopScanLabel();
         }
 
         private void BondWithBluetoothDevice(SimpleBluetoothDevice device)
@@ -129,14 +134,13 @@ namespace ManageBluetooth.ViewModels
 
         private void PageAppearing()
         {
-            IsBusy = true;
-
-            this.IsBluetoothEnabled = _bluetoothService.IsBluetoothEnabled();
-            this.UpdateBluetoothProperties();
-            this.UpdateStartStopScanLabel();
+            this.SubscribeMessagingCenter();
             this.StartStopBluetoothScanning();
+        }
 
-            IsBusy = false;
+        private void PageDisappearing()
+        {
+            UnsubscribeMessagingCenter();
         }
 
         private void StartStopScanning()
@@ -165,17 +169,17 @@ namespace ManageBluetooth.ViewModels
 
         private void ChangeBluetoothState()
         {
-            if (IsBusy)
+            if (!CanExecute)
             {
                 return;
             }
 
-            IsBusy = true;
+            CanExecute = false;
 
             this._bluetoothService.ChangeBluetoothState();
             this.UpdateBluetoothProperties();
 
-            IsBusy = false;
+            CanExecute = true;
         }
 
         private void StartBluetoothScan()
@@ -281,7 +285,7 @@ namespace ManageBluetooth.ViewModels
             }
         }
 
-        private void SetUpMessaginCenter()
+        private void SubscribeMessagingCenter()
         {
             MessagingCenter.Subscribe<Application, bool>(Application.Current, BluetoothCommandConstants.BluetootStateChanged, (sender, arg) =>
             {
@@ -312,6 +316,19 @@ namespace ManageBluetooth.ViewModels
             {
                 this.UpdateBluetoothDeviceBondState(arg);
             });
+        }
+
+        private static void UnsubscribeMessagingCenter()
+        {
+            MessagingCenter.Unsubscribe<Application, bool>(Application.Current, BluetoothCommandConstants.BluetootStateChanged);
+
+            MessagingCenter.Unsubscribe<Application, SimpleBluetoothDevice>(Application.Current, BluetoothCommandConstants.BluetootDeviceDiscovered);
+
+            MessagingCenter.Unsubscribe<Application, bool>(Application.Current, BluetoothCommandConstants.BluetoothScanningStateChanged);
+
+            MessagingCenter.Unsubscribe<Application, UpdateBluetoothConnectionStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceConnectionStateChanged);
+
+            MessagingCenter.Unsubscribe<Application, UpdateBluetoothBondStatusModel>(Application.Current, BluetoothCommandConstants.BluetoothDeviceBondStateChanged);
         }
 
         private void UpdateBluetoothProperties()

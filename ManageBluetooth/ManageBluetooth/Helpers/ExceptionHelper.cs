@@ -42,6 +42,9 @@ namespace ManageBluetooth.Helpers
                     case ErrorEnum.CannotChangeDeviceAlias:
                         toastService.ShortAlert(AppResources.CannotChangeDeviceAlias);
                         break;
+                    case ErrorEnum.ErrorDisconnecting:
+                        toastService.ShortAlert(AppResources.ErrorDisconnecting);
+                        break;
                 }
             }
             else

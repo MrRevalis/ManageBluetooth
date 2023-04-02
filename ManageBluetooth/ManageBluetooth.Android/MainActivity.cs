@@ -16,6 +16,8 @@ namespace ManageBluetooth.Droid
     [Activity(Label = "Manage Bluetooth", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.LayoutDirection | ConfigChanges.Locale)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        private const string DefaultLanguage = "en";
+
         private readonly string[] Permissions =
         {
             Manifest.Permission.Bluetooth,
@@ -52,7 +54,7 @@ namespace ManageBluetooth.Droid
 
             LoadApplication(new App());
         }
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -62,9 +64,9 @@ namespace ManageBluetooth.Droid
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
-            // newConfig.Locale.Language
+
             var locale = newConfig.Locales.Get(0);
-            var newCulture = !string.IsNullOrEmpty(locale.Language) ? locale.Language : "en";
+            var newCulture = !string.IsNullOrEmpty(locale.Language) ? locale.Language : DefaultLanguage;
             LocalizationResourceManager.Current.CurrentCulture = new System.Globalization.CultureInfo(newCulture);
         }
 

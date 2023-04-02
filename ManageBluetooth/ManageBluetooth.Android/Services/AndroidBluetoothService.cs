@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 
 using Java.Util;
 
@@ -40,7 +39,7 @@ namespace ManageBluetooth.Droid.Services
             this._bluetoothManager = Android.App.Application.Context.GetSystemService(Context.BluetoothService) as BluetoothManager;
             this._bluetoothAdapter = this._bluetoothManager.Adapter;
 
-            this._defaultParcelUuid = new ParcelUuid(UUID.FromString("00001101-0000-1000-8000-00805F9B34FB"));
+            this._defaultParcelUuid = new ParcelUuid(UUID.FromString("00001108-0000-1000-8000-00805F9B34FB"));
         }
 
         public IEnumerable<SimpleBluetoothDevice> GetBondedDevices()
@@ -145,37 +144,23 @@ namespace ManageBluetooth.Droid.Services
                     this.deviceInputStream.Close();
                     this.deviceInputStream = null;
 
+                    Thread.Sleep(500);
+
                     this.deviceOutputStream.Close();
                     this.deviceOutputStream = null;
 
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
 
-                    //this._socket.Close();
+                    this._socket.Close();
 
-                    //if (!this._socket.IsConnected)
-                    //{
-                    //    this._socket = null;
-                    //}
-
-                    var inputStream = this._socket.InputStream as InputStreamInvoker;
-                    while (true)
+                    if (!this._socket.IsConnected)
                     {
-                        try
-                        {
-                            var nextByte = inputStream.ReadByte();
-                        }
-                        catch (Java.IO.IOException)
-                        {
-                            this._socket.Close();
-                            this._socket = null;
-
-                            break;
-                        }
+                        this._socket = null;
                     }
                 }
                 catch (Exception)
                 {
-                    throw new Exception(ErrorEnum.CannotConnectToTheDevice.ToString());
+                    throw new Exception(ErrorEnum.ErrorDisconnecting.ToString());
                 }
             }
         }
@@ -196,7 +181,7 @@ namespace ManageBluetooth.Droid.Services
 
                     if (!uuids.Contains(_defaultParcelUuid))
                     {
-                        uuids.Append(_defaultParcelUuid);
+                        uuids.Prepend(_defaultParcelUuid);
                     }
 
                     foreach (var uuid in uuids)
@@ -216,6 +201,8 @@ namespace ManageBluetooth.Droid.Services
                             Thread.Sleep(1000);
 
                             await _socket.ConnectAsync();
+
+                            Thread.Sleep(1000);
 
                             this.deviceInputStream = this._socket.InputStream;
                             this.deviceOutputStream = this._socket.OutputStream;

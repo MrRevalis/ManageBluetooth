@@ -185,4 +185,8 @@
     <value>Cannot change device alias</value>
     <comment>Cannot change device alias</comment>
   </data>
+  <data name="ErrorDisconnecting" xml:space="preserve">
+    <value>An error occurred while disconnecting from the device</value>
+    <comment>An error occurred while disconnecting from the device</comment>
+  </data>
 </root>

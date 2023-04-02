@@ -6,5 +6,6 @@
         DeviceCannotBeFound,
         CannotConnectToTheDevice,
         CannotChangeDeviceAlias,
+        ErrorDisconnecting,
     }
 }

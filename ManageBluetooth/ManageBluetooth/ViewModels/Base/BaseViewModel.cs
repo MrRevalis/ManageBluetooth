@@ -7,19 +7,7 @@ namespace ManageBluetooth.ViewModels.Base
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        bool isBusy = false;
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
-
-        string title = string.Empty;
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
-        }
+        protected bool CanExecute { get; set; }
 
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",
@@ -42,6 +30,11 @@ namespace ManageBluetooth.ViewModels.Base
                 return;
 
             changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public BaseViewModel()
+        {
+            this.CanExecute = true;
         }
     }
 }
