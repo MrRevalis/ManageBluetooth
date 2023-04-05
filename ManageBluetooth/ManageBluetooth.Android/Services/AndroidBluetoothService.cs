@@ -144,12 +144,10 @@ namespace ManageBluetooth.Droid.Services
                     this.deviceInputStream.Close();
                     this.deviceInputStream = null;
 
-                    Thread.Sleep(500);
-
                     this.deviceOutputStream.Close();
                     this.deviceOutputStream = null;
 
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
 
                     this._socket.Close();
 
@@ -198,11 +196,7 @@ namespace ManageBluetooth.Droid.Services
                             // this._socket = device.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(uuid.ToString()));
                             // this._socket = this.CreateSocket(device);
 
-                            Thread.Sleep(1000);
-
                             await _socket.ConnectAsync();
-
-                            Thread.Sleep(1000);
 
                             this.deviceInputStream = this._socket.InputStream;
                             this.deviceOutputStream = this._socket.OutputStream;

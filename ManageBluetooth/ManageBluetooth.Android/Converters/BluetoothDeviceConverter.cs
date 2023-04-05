@@ -13,7 +13,7 @@ namespace ManageBluetooth.Droid.Converters
             {
                 DeviceId = device.Address,
                 DeviceName = device.GetDeviceName(),
-                IsBonded = device.BondState == Bond.Bonded ? true : false,
+                IsBonded = device.BondState == Bond.Bonded,
                 DeviceClass = device.GetDeviceType(),
                 DeviceState = device.GetDeviceConnectionState()
             };

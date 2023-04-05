@@ -8,6 +8,7 @@ using ManageBluetooth.Models;
 using ManageBluetooth.Models.Constants;
 using ManageBluetooth.Models.Enum;
 
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace ManageBluetooth.Services
@@ -66,8 +67,7 @@ namespace ManageBluetooth.Services
             this.UpdateBluetoothDeviceConnectionState(device, BluetoothDeviceConnectionStateEnum.Connecting);
             for (int i = 0; i < MaxConnectionTries; i++)
             {
-                var result = await this._androidBluetoothService.ConnectWithDevice(device.DeviceId)
-                    .ExecuteAsyncOperation();
+                var result = await Device.InvokeOnMainThreadAsync(async () => await this._androidBluetoothService.ConnectWithDevice(device.DeviceId).ExecuteAsyncOperation());
 
                 if (result)
                 {
@@ -85,7 +85,7 @@ namespace ManageBluetooth.Services
                 return;
             }
 
-            this._androidBluetoothService.DisconnectWithDevice();
+            MainThread.BeginInvokeOnMainThread(() => this._androidBluetoothService.DisconnectWithDevice());
         }
 
         public SimpleBluetoothDevice GetBluetoothDevice(string id)

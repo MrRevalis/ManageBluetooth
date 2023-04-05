@@ -124,7 +124,6 @@ namespace ManageBluetooth.ViewModels
             if (device.DeviceState == BluetoothDeviceConnectionStateEnum.Connected)
             {
                 ExceptionHelper.CatchException(() => this._bluetoothService.DisconnectWithBluetoothDevice());
-
             }
             else
             {
@@ -213,7 +212,6 @@ namespace ManageBluetooth.ViewModels
             }
         }
 
-
         private void UpdateBluetoothDeviceConnectionState(UpdateBluetoothConnectionStatusModel updateModel)
         {
             switch (updateModel.DeviceState)
@@ -240,10 +238,6 @@ namespace ManageBluetooth.ViewModels
                 var deviceModel = this.Devices[deviceIndex];
                 deviceModel.DeviceState = updateModel.DeviceState;
 
-                //var deviceModel = this.Devices
-                //    .FirstOrDefault(x => x.DeviceId == updateModel.DeviceId);
-                //deviceModel.DeviceState = updateModel.DeviceState;
-
                 if (deviceModel.DeviceState == BluetoothDeviceConnectionStateEnum.Connected
                     && deviceIndex != Constants.FirstIndex)
                 {
@@ -259,14 +253,6 @@ namespace ManageBluetooth.ViewModels
             if (deviceIndex != Constants.NotFoundIndex)
             {
                 var device = this.Devices[deviceIndex];
-
-                //if (device.IsBonded != updateModel.IsBonded)
-                //{
-                //    device.IsBonded = updateModel.IsBonded;
-
-                //    var newDevice = new SimpleBluetoothDevice(device);
-                //    this.Devices[deviceIndex] = newDevice;
-                //}
 
                 if (device.IsBonded != updateModel.IsBonded)
                 {
@@ -289,8 +275,15 @@ namespace ManageBluetooth.ViewModels
         {
             MessagingCenter.Subscribe<Application, bool>(Application.Current, BluetoothCommandConstants.BluetootStateChanged, (sender, arg) =>
             {
-                this.IsBluetoothEnabled = arg;
-                StartStopBluetoothScanning();
+                if (this.IsBluetoothEnabled != arg)
+                {
+                    CanExecute = false;
+
+                    this.IsBluetoothEnabled = arg;
+                    StartStopBluetoothScanning();
+
+                    CanExecute = true;
+                }
             });
 
             MessagingCenter.Subscribe<Application, SimpleBluetoothDevice>(Application.Current, BluetoothCommandConstants.BluetootDeviceDiscovered, (sender, arg) =>
